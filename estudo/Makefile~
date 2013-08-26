@@ -1,7 +1,0 @@
-all:
-	gcc -o tree tree.c -W -Wall
-
-
-clean:
-	rm -f *~ *.out
-	rm -f tree
