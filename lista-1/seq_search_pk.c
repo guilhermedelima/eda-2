@@ -16,8 +16,6 @@ int get_index(p_index *table, int table_length, int val);
 
 int main(int argc, char *argv[]){
 
-	printf("%d", teste);
-
 	if(argc != 3){
 		fprintf(stderr, "Correct usage: %s <INDEX_LENGTH> <ARRAY_LENGTH>\n", argv[0]);
 		exit(-1);
@@ -124,15 +122,6 @@ int get_index(p_index *table, int table_length, int val){
 	return i-1;
 }
 
-void search(int *vec, int offset, p_index *table, int table_length, int val){
-
-
-
-
-
-
-
-}
 
 
 
