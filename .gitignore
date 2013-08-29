@@ -15,4 +15,9 @@
 *.exe
 *.out
 *.app
+
+# Backup Files
 *~
+
+# Binary files
+lista-1/bin/

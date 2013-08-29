@@ -1,0 +1,21 @@
+#ifndef SEQ_SEARCH_PK_H_INCLUDED
+#define SEQ_SEARCH_PK_H_INCLUDED
+
+
+typedef struct{
+	int value;
+	int *regst;
+}p_index;
+
+int *create_vec(int length);
+void print_vec(int *vec, int length);
+p_index *create_index(int *vec, int vec_length, int n_index);
+void print_index_table(p_index *table, int length);
+int get_index(p_index *table, int table_length, int val);
+int *search(int *vec, int offset, p_index *table, int table_length, int val);
+void delete(int *vec, int offset, p_index *table, int table_length, int val);
+void delete_element(int *element);
+void delete_index(int *element, int offset, int val_last_index);
+
+
+#endif

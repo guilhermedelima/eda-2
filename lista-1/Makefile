@@ -5,12 +5,15 @@ INCDIR=include
 SRCDIR=src
 BINDIR=bin
 
-all:
-	$(CC) $(CFLAGS) -o $(BINDIR)/seq_search_pk seq_search_pk.c
+all: pksearch ringlist
 
 clean:
 	rm -f *~ *.out
 	rm -f $(BINDIR)/*
+
+# EXERCÍCIO 4
+pksearch:
+	$(CC) $(CFLAGS) -I $(INCDIR) -o $(BINDIR)/seq_search_pk $(SRCDIR)/seq_search_pk.c
 
 # EXERCÍCIO 5
 ringlist:
