@@ -6,7 +6,7 @@
 int main(int argc, char *argv[]){
 
 	if(argc != 3){
-		fprintf(stderr, "Correct usage: %s <INDEX_LENGTH> <ARRAY_LENGTH>\n", argv[0]);
+		fprintf(stderr, "Correct usage: %s <INDEX_LENGTH> <VECTOR_LENGTH>\n", argv[0]);
 		exit(-1);
 	}
 
@@ -25,7 +25,7 @@ int main(int argc, char *argv[]){
 
 	do{
 		
-		printf("1-Insert || 2-Search || 3-Delete || 4-Print Vector: ");
+		printf("1-Insert || 2-Search || 3-Delete || 4-Print Vector || 5-Print Index: ");
 		scanf("%d", &op);
 		
 		switch(op){
@@ -51,6 +51,9 @@ int main(int argc, char *argv[]){
 			case 4:
 				print_vec(vec, vec_length);
 				break;
+			case 5:
+				print_index_table(i_table, index_length);
+				break;
 			default:
 				printf("Invalid Option\n");
 				
@@ -64,21 +67,16 @@ int main(int argc, char *argv[]){
 	return 0;
 }
 
-
 int *create_vec(int length){
 
 	int *vec = (int *) malloc(length * sizeof(int));
 	
 	int i;
 	for(i=0; i<length; i++)
-		*(vec+i) = i+1;
+		vec[i] = i;
 
 	return vec;
 }
-
-
-
-
 
 p_index *create_index(int *vec, int index_length, int offset){
 
@@ -88,7 +86,7 @@ p_index *create_index(int *vec, int index_length, int offset){
 	for(i=0; i<index_length; i++){
 		p_index idx;
 		
-		idx.value = *(vec + i*offset) ;
+		idx.value = vec[i*offset] ;
 		idx.regst = vec + i*offset;
 
 		table[i] = idx;
@@ -123,10 +121,16 @@ void print_index_table(p_index *table, int length){
 
 	int i;
 	for(i=0; i<length; i++)
-		printf("Index %d\n", *((table+i)->regst) );
+		printf("Index %d\n", *( (table+i)->regst) );
 
 }
 
+void swap_int(int *a, int *b){
+
+	int temp = *b;
+	*b = *a;
+	*a = temp;
+}
 
 int get_index(p_index *table, int table_length, int val){
 
@@ -142,27 +146,18 @@ int get_index(p_index *table, int table_length, int val){
 }
 
 
-void swap_int(int *a, int *b){
-
-	int temp = *b;
-	*b = *a;
-	*a = temp;
-}
-
-
 int *search(int *vec, int offset, p_index *table, int table_length, int val){
 
 	int index, shift;
-	
+	int *result = NULL;	
+
 	index = get_index(table, table_length, val);
 	shift = offset * index;
-
-	int *result = NULL;
 
 	int i;
 	for(i=0; i<offset && index>=0; i++){
 
-		if( val == *(vec + shift+i) ){
+		if( val == vec[shift+i] ){
 			result = vec + shift+i;
 			printf("Found value %d after %d searches\n", *result, i);
 			break;
@@ -193,8 +188,6 @@ void delete(int *vec, int offset, p_index *table, int table_length, int val){
 		int val_last_index = (table + table_length-1)->value;
 		delete_index(element, offset, val_last_index);
 
-		printf("INDEX DELETED\n");
-
 	}else
 		delete_element(element);
 }
@@ -209,9 +202,11 @@ void delete_index(int *element, int offset, int val_last_index){
 	int i;
 	for(i=1; i<offset && *(element + i)==EMPTY; i++);
 
-	/* - Acha um substituto para trocar
-	   - Estoura a janela sendo o ultimo index
-	   - Estoura a janela e troca com próximo index */
+	/*
+	   - Acha um substituto para trocar
+	   - Estoura a janela e troca com próximo index 
+	   - Estoura a janela sendo o ultimo index 
+	*/
 
 	if( i<offset ){
 
