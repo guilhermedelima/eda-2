@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <limits.h>
 #include "seq_search_pk.h"
 
 int main(int argc, char *argv[]){
@@ -35,20 +34,28 @@ int main(int argc, char *argv[]){
 			case 2:
 				printf("Search for: ");
 				scanf("%d", &n);
+
 				search(vec, offset, i_table, index_length, n);
 				break;
 			case 3:
 				printf("Delete value: ");
 				scanf("%d", &n);
+
 				delete(vec, offset, i_table, index_length, n);
-				free(i_table);
-				i_table = create_index(vec, index_length, offset);
+				i_table = rebuild_index(i_table, vec, index_length, offset);
+
 				print_index_table(i_table, index_length);
 				printf("New Vector:\n");
 				print_vec(vec, vec_length);
 				break;
+			case 4:
+				print_vec(vec, vec_length);
+				break;
+			default:
+				printf("Invalid Option\n");
 				
 		}
+
 		printf("Continue ? <y/n> ");
 		scanf(" %c", &stp);
 
@@ -64,7 +71,7 @@ int *create_vec(int length){
 	
 	int i;
 	for(i=0; i<length; i++)
-		*(vec+i) = i;
+		*(vec+i) = i+1;
 
 	return vec;
 }
@@ -91,12 +98,24 @@ p_index *create_index(int *vec, int index_length, int offset){
 
 }
 
+p_index *rebuild_index(p_index *table, int *vec, int index_length, int offset){
+
+	free(table);
+	table = create_index(vec, index_length, offset);
+
+	return table;
+}
+
 
 void print_vec(int *vec, int length){
 
 	int i;
-	for(i=0; i<length; i++)
-		printf("%d\n", vec[i]);
+	for(i=0; i<length; i++){
+		if( vec[i] == EMPTY)
+			printf("EMPTY\n");
+		else
+			printf("%d\n", vec[i]);
+	}
 }
 
 
@@ -104,7 +123,7 @@ void print_index_table(p_index *table, int length){
 
 	int i;
 	for(i=0; i<length; i++)
-		printf("%d Index %d - Value: %d\n", i, (table+i)->value, *((table+i)->regst) );
+		printf("Index %d\n", *((table+i)->regst) );
 
 }
 
@@ -174,31 +193,41 @@ void delete(int *vec, int offset, p_index *table, int table_length, int val){
 		int val_last_index = (table + table_length-1)->value;
 		delete_index(element, offset, val_last_index);
 
+		printf("INDEX DELETED\n");
+
 	}else
 		delete_element(element);
 }
 
 
 void delete_element(int *element){
-	*element = INT_MAX;
+	*element = EMPTY;
 }
 
 void delete_index(int *element, int offset, int val_last_index){
 
 	int i;
-	for(i=1; i<offset && *(element + i)==INT_MAX; i++)
-		printf("Percorrendo %d\n", *(element + i) );
+	for(i=1; i<offset && *(element + i)==EMPTY; i++);
 
 	/* - Acha um substituto para trocar
 	   - Estoura a janela sendo o ultimo index
 	   - Estoura a janela e troca com próximo index */
 
 	if( i<offset ){
+
 		swap_int(element, element+i);
-		delete_element(element+i);		
-	}else if( *element < val_last_index ){
-		swap_int(element, element+offset);
-		delete_index(element+offset, offset, val_last_index);
+		delete_element(element+i);
+		
+	}else if( *element != val_last_index ){
+
+		int *next = element+offset;
+
+		if( *next == val_last_index )
+			val_last_index = *element;
+
+		swap_int(element, next);
+		delete_index(next, offset, val_last_index);
+
 	}else
 		delete_element(element);
 
