@@ -26,7 +26,7 @@ $(TARGET): $(OBJ)
 
 # EXERCÍCIO 5
 ringlist:
-	$(CC) $(CFLAGS) -o $(BINDIR)/ringlist $(SRCDIR)/node.c $(SRCDIR)/ringlist.c $(SRCDIR)/test_ringlist.c
+	$(CC) $(CFLAGS) -o $(BINDIR)/ringlist $(SRCDIR)/ringlist.c $(SRCDIR)/test_ringlist.c
 
 clean:
 	rm -f *~ *.out
