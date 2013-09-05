@@ -7,22 +7,20 @@ CC=gcc
 CFLAGS=-W -Wall -Wno-sign-compare
 CINCLUDE=-I $(INCDIR)
 
-TARGET=seq_search_pk
+TARGET_EX1=index_search
 
-_HEADER=seq_search_pk.h
-_OBJ=seq_search_pk.o
-_SRC=seq_search_pk.c
+_HEADER=index_search.h
+_OBJ=index_search.o test_index_search.o
 
 HEADER=$(patsubst %,$(INCDIR)/%,$(_HEADER))
 OBJ=$(patsubst %,$(OBJDIR)/%,$(_OBJ))
-SRC=$(patsubst %,$(SRCDIR)/%,$(_SRC))
 
-all: $(TARGET) ringlist
+all: $(TARGET_EX1) ringlist
 
-$(OBJDIR)/%.o: $(SRC) $(HEADER)
+$(OBJDIR)/%.o: $(SRCDIR)/%.c $(HEADER)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-$(TARGET): $(OBJ)
+$(TARGET_EX1): $(OBJ)
 	$(CC) $(CFLAGS) -o $(BINDIR)/$@ $^
 
 # EXERCÍCIO 5
