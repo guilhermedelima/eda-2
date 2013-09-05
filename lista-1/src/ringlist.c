@@ -1,8 +1,10 @@
 #include <ringlist.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <time.h>
 
-RingList* ringlist_new(int capacity) {
+RingList* ringlist_new(unsigned int capacity) {
 	if (capacity < 1)
 		return NULL;
 
@@ -15,36 +17,35 @@ RingList* ringlist_new(int capacity) {
 	return list;
 }
 
-int _ringlist_increase_capacity(RingList *list, int new_capacity)
+int _ringlist_increase_capacity(RingList *list, unsigned int new_capacity)
 {
 	if(!list)
 		return ERROR_NULL_LIST;
 	if(new_capacity <= list->capacity)
 		return ERROR_NEW_CAPACITY_LESS_THAN_ACTUAL;
 
-	int *old_values = list->values;
 	int *new_values = calloc(new_capacity, sizeof(int));
-
+	
 	int i;
 	for(i = 0; i < list->size; i++) 
-		new_values[i] = old_values[i];
+		new_values[i] = list->values[i];
 
-	list->capacity = new_capacity;
+	free(list->values);
 	list->values = new_values;
 
-	free(old_values);
+	list->capacity = new_capacity;
 
 	return OK;
 }
 
-int _ringlist_move_cells(RingList *list, int init_index, direction dir) {
+int _ringlist_move_cells(RingList *list, unsigned int low_index, direction dir) {
 	if(!list)
 		return ERROR_NULL_LIST;
 
 	if (dir == FRONT) {
 		if (list->size > 1) {
 			int i;
-			for (i = list->size; i > init_index; i--)
+			for (i = list->size; i > low_index; i--)
 				list->values[i] = list->values[i-1];
 		} else {
 			list->values[1] = list->values[0];
@@ -53,7 +54,7 @@ int _ringlist_move_cells(RingList *list, int init_index, direction dir) {
 	} else {
 		if (list->size > 1) {
 			int i;
-			for (i = init_index; i < list->size-1; i++)
+			for (i = low_index; i < list->size-1; i++)
 				list->values[i] = list->values[i+1];
 		} 	
 	}
@@ -90,11 +91,9 @@ int ringlist_insert(RingList *list, int val) {
 	return OK;
 }
 
-int ringlist_remove_index(RingList *list, int index) {
+int ringlist_remove_byindex(RingList *list, unsigned int index) {
 	if(!list)
 		return ERROR_NULL_LIST;
-	if (index < 0)
-		return ERROR_INVALID_INDEX;
 	if(list->size == 0)
 		return ERROR_EMPTY_LIST;
 
@@ -108,7 +107,7 @@ int ringlist_remove_index(RingList *list, int index) {
 	return OK;
 }
 
-int ringlist_remove_value(RingList *list, int val) {
+int ringlist_remove_byvalue(RingList *list, int val) {
 	if(!list)
 		return ERROR_NULL_LIST;
 	if(list->size == 0)
@@ -129,7 +128,7 @@ int ringlist_remove_value(RingList *list, int val) {
 	return OK;
 }
 
-int ringlist_get(RingList *list, int index) {
+int ringlist_get(RingList *list, unsigned int index) {
 	if(!list)
 		return ERROR_NULL_LIST;
 	if(list->size == 0)
@@ -139,13 +138,13 @@ int ringlist_get(RingList *list, int index) {
 }
 
 
-int ringlist_fill(RingList *list, int range) {
+int ringlist_fill(RingList *list, unsigned long long int range) {
 	if(!list)
 		return ERROR_NULL_LIST;
 
 	int i;
 	for(i = 0; i < range; i++)
-		ringlist_insert(list, i);
+		ringlist_insert(list, i*5);
 
 	return OK;
 }
@@ -156,14 +155,16 @@ int ringlist_print(RingList *list) {
 	
 	if(list->size == 0) {
 		printf("Values = []\n");
-	} else {
+	} else if (list->size <= 1000) {
 		int i;
 		printf("Values = [");
 		for(i = 0; i < list->size - 1; i++) {
 			printf("%d, ", list->values[i]);
 		}
 		printf("%d]\n", list->values[list->size-1]);	
-	}
+	} else {
+		printf("Values = [...]\n");
+	} 
 
 	
 	printf("Size = %d\nCapacity = %d\n", list->size, list->capacity);
@@ -176,22 +177,53 @@ int ringlist_bsearch(RingList *list, int val) {
 		return ERROR_NULL_LIST;
 	if(!list->size)
 		return ERROR_NOT_FOUND;
-	int init, end, mid;
-	init = 0;
-	end = list->size-1;
+	int low, high, mid;
+	low = 0;
+	high = list->size-1;
 	
+	int i = 0;
+	while (low <= high) {
+		mid = low + ((high-low) / 2);
 
-	while (init <= end) {
-		mid = init + ((end-init) / 2);
-
-		if (val == list->values[mid]) {
-			return mid;
+		if (val < list->values[mid]) {
+			high = mid - 1;
 		} else if (val > list->values[mid]) {
-			init = mid + 1;
+			low = mid + 1;
 		} else {
-			end = mid - 1;
+			printf("Search loops = %d\n", i);
+			return mid;
 		}
+		i++;
 	}
+	printf("Search loops = %d\n", i);
 
 	return ERROR_NOT_FOUND;
+}
+
+int ringlist_interpolsearch(RingList *list, int val) {
+	if(!list)
+		return ERROR_NULL_LIST;
+	if(!list->size)
+		return ERROR_NOT_FOUND;
+	int low, high, mid;
+	low = 0;
+	high = list->size-1;
+	
+	int i = 0;
+	while (low <= high) {
+		mid = low + (high-low) * ((val - list->values[low]) / (list->values[high] - list->values[low]));
+
+		if (val < list->values[mid]) {
+			high = mid - 1;
+		} else if (val > list->values[mid]) {
+			low = mid + 1;
+		} else {
+			printf("Search loops = %d\n", i);
+			return mid;
+		}
+		i++;
+	}
+	printf("Search loops = %d\n", i);
+
+	return ERROR_NOT_FOUND;	
 }

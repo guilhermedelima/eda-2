@@ -19,5 +19,8 @@
 # Backup Files
 *~
 
-# Binary files
+# Binary path
 lista-1/bin/
+
+# Log files
+lista-1/log/*

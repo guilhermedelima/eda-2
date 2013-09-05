@@ -8,7 +8,6 @@
 #define ERROR_NOT_FOUND -103
 #define ERROR_NEW_CAPACITY_LESS_THAN_ACTUAL -104
 #define ERROR_INVALID_CAPACITY -105
-#define ERROR_INVALID_INDEX -106
 #define ERROR_EMPTY_LIST -107
 
 // Definitions
@@ -17,18 +16,19 @@ typedef enum _boolean {true=1, false=0} boolean;
 typedef struct _RingList
 {
 	int *values;
-	int size;
-	int capacity;
+	unsigned int size;
+	unsigned int capacity;
 } RingList;
 
 // Public functions
-extern RingList* ringlist_new(int capacity); 
-extern int ringlist_fill(RingList *list, int size);
+extern RingList* ringlist_new(unsigned int capacity); 
+extern int ringlist_fill(RingList *list, unsigned long long int size);
 extern int ringlist_print(RingList *list);
 extern int ringlist_bsearch(RingList *list, int val);
+extern int ringlist_interpolsearch(RingList *list, int val);
 extern int ringlist_insert(RingList *list, int val);
-extern int ringlist_remove_index(RingList *list, int index);
-extern int ringlist_remove_value(RingList *list, int val);
-extern int ringlist_get(RingList *list, int index);
+extern int ringlist_remove_byindex(RingList *list, unsigned int index);
+extern int ringlist_remove_byvalue(RingList *list, int val);
+extern int ringlist_get(RingList *list, unsigned int index);
 
 #endif

@@ -4,7 +4,8 @@ BINDIR=bin
 OBJDIR=obj
 
 CC=gcc
-CFLAGS=-W -Wall -I $(INCDIR)
+CFLAGS=-W -Wall -Wno-sign-compare
+CINCLUDE=-I $(INCDIR)
 
 TARGET=seq_search_pk
 
@@ -26,7 +27,7 @@ $(TARGET): $(OBJ)
 
 # EXERCÍCIO 5
 ringlist:
-	$(CC) $(CFLAGS) -o $(BINDIR)/ringlist $(SRCDIR)/ringlist.c $(SRCDIR)/test_ringlist.c
+	$(CC) $(CFLAGS) $(CINCLUDE) -o $(BINDIR)/ringlist $(SRCDIR)/ringlist.c $(SRCDIR)/test_ringlist.c -lrt
 
 clean:
 	rm -f *~ *.out
