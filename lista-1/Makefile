@@ -18,12 +18,13 @@ OBJ=$(patsubst %,$(OBJDIR)/%,$(_OBJ))
 all: $(TARGET_EX1) ringlist
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c $(HEADER)
-	$(CC) $(CFLAGS) -c -o $@ $<
+	$(CC) $(CFLAGS) $(CINCLUDE) -c -o $@ $<
 
+# EXERCÍCIO 4 
 $(TARGET_EX1): $(OBJ)
-	$(CC) $(CFLAGS) -o $(BINDIR)/$@ $^
+	$(CC) $(CFLAGS) $(CINCLUDE) -o $(BINDIR)/$@ $^
 
-# EXERCÍCIO 5
+# EXERCÍCIO 5/6
 ringlist:
 	$(CC) $(CFLAGS) $(CINCLUDE) -o $(BINDIR)/ringlist $(SRCDIR)/ringlist.c $(SRCDIR)/test_ringlist.c -lrt
 

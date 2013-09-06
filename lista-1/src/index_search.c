@@ -3,29 +3,44 @@
 #include <string.h>
 #include "index_search.h"
 
-int *create_vec(int length){
+vector *create_vector(int length){
 
-	int *vec = (int *) malloc(length * sizeof(int));
+	int *vec_list = (int *) malloc( (length+1) * sizeof(int));
 	
 	int i;
 	for(i=0; i<length; i++)
-		vec[i] = i;
+		vec_list[i] = i*2;
+
+	vec_list[i] = LAST_BLOCK;
+
+	vector *vec = (vector *) malloc( 1 * sizeof(vector) );
+
+	vec->length = length;
+	vec->list = vec_list;
 
 	return vec;
 }
 
-void print_vec(int *vec, int length){
+int *rebuild_vec_list(int *vec_list, int length){
 
-	int i;
-	for(i=0; i<length; i++){
-		if( vec[i] == EMPTY)
-			printf("EMPTY\n");
-		else
-			printf("%d\n", vec[i]);
-	}
+	vec_list = (int *) realloc( vec_list, (length+1) * sizeof(int) );
+
+	return vec_list;
+
 }
 
-indexed_table *create_indexed_table(int *vec, int index_length, int window_size){
+void print_vec_list(int *vec_list){
+
+	printf("[ ");
+
+	int i;
+	for(i=0; vec_list[i]!=LAST_BLOCK; i++)
+		printf("%d ", vec_list[i]);
+
+	printf("]\n");
+}
+
+indexed_table *create_indexed_table(int *vec_list, int index_length, int window_size){
 
 	primary_index *index_list = (primary_index *) calloc( index_length, sizeof(primary_index) );
 	
@@ -33,8 +48,8 @@ indexed_table *create_indexed_table(int *vec, int index_length, int window_size)
 	for(i=0; i<index_length; i++){
 		primary_index idx;
 		
-		idx.value = vec[i*window_size] ;
-		idx.regst = vec + i*window_size;
+		idx.value = vec_list[i*window_size] ;
+		idx.regst = vec_list + i*window_size;
 
 		index_list[i] = idx;
 	}
@@ -49,9 +64,9 @@ indexed_table *create_indexed_table(int *vec, int index_length, int window_size)
 
 }
 
-indexed_table *rebuild_indexed_table(indexed_table *table, int *vec){
+indexed_table *rebuild_indexed_table(indexed_table *table, int *vec_list){
 
-	indexed_table *new_table = create_indexed_table(vec, table->length, table->window_size);
+	indexed_table *new_table = create_indexed_table(vec_list, table->length, table->window_size);
 
 	free(table->list);
 	free(table);
@@ -64,6 +79,42 @@ void print_indexed_table(indexed_table *table){
 	int i;
 	for(i=0; i < table->length; i++)
 		printf("Index %d\n", (table->list[i]).value ) ;
+
+}
+
+void swap_int(int *a, int *b){
+
+	int temp = *b;
+	*b = *a;
+	*a = temp;
+}
+
+
+int get_index(indexed_table *table, int val){
+
+	int i;
+	for(i=0; i < table->length && !(val < table->list[i].value); i++);
+	
+	return i-1;
+}
+
+int check_last_index(indexed_table *table){
+
+	int op, *last_index;
+
+	last_index = table->list[table->length -1].regst;
+
+	int i;
+	for(i=0; last_index[i] != LAST_BLOCK; i++);
+
+	if(i > table->window_size)
+		op = INCREASE_INDEX;
+	else if(!i)
+		op = REMOVE_INDEX;
+	else
+		op = DO_NOTHING;
+
+	return op;
 
 }
 
@@ -80,10 +131,10 @@ int *search(indexed_table *table, int val){
 		window = table->list[index].regst;
 
 		int i;
-		for(i=0; i < table->window_size; i++){
+		for(i=0; i < table->window_size && window[i]!=LAST_BLOCK; i++){
 			if(val == window[i]){
 				result = window+i;
-				printf("Found value %d after %d searches\n", *result, i+1);
+				printf("Found value %d after %d searches on window\n", *result, i+1);
 				break;		
 			}
 		}
@@ -96,125 +147,72 @@ int *search(indexed_table *table, int val){
 
 }
 
-int get_index(indexed_table *table, int val){
+void delete(indexed_table **table, vector *vec, int val){
 
-	int i;
-	for(i=0; i < table->length && !(val < table->list[i].value); i++);
-	
-	return i-1;
-}
+	int *element, op;
 
-void swap_int(int *a, int *b){
-
-	int temp = *b;
-	*b = *a;
-	*a = temp;
-}
-
-
-/*
-  Função para deletar um elemento do vetor. Utiliza-se a técnica de deixar um espaço em branco na lista.
-  A remoção pode ser realizada para um elemento comum ou um índice
-*/
-void delete(indexed_table *table, int val){
-
-	int index, *element;
-
-	element = search(table, val);
+	element = search(*table, val);
 
 	if(!element)
 		return;
 
-	index = get_index(table, val);
+	do{
+		swap_int(element, element+1);
+		element = element+1;
 
-	if( table->list[index].value == val ){
-		
-		int val_last_index;
-		val_last_index = table->list[table->length-1].value;
+	}while( *(element-1) != LAST_BLOCK );
 
-		delete_index(element, table->window_size, val_last_index);
+	vec->length--;
+	vec->list = rebuild_vec_list(vec->list, vec->length);
 
-	}else
-		delete_element(element);
+	op = check_last_index(*table);
+
+	if(op == REMOVE_INDEX)
+		(*table)->length--;
+
+	*table = rebuild_indexed_table(*table, vec->list);
+	
 }
 
-/*
- Função para efetuar remoçao de um indíce do vetor. Existem três possibilidades:
- - Acha um substituto para trocar
- - Estoura a janela e troca com próximo index 
- - Estoura a janela sendo o ultimo index 
-*/
-void delete_index(int *element, int window_size, int val_last_index){
+void insert(indexed_table **table, vector *vec, int val){
+
+	int index, index_to_insert, *element, op;
+
+	index = get_index(*table, val);
+	
+	if(index < 0)
+		index_to_insert=0;
+	else{
+
+		int *window;
+		window = (*table)->list[index].regst;
+
+		int i;
+		for(i=0; i < (*table)->window_size && val >= window[i] && window[i]!=LAST_BLOCK ; i++);
+
+		index_to_insert = i + index * (*table)->window_size;
+	}
+
+	printf("Index to insert: %d\n", index_to_insert);
+
+	vec->length++;
+	vec->list = rebuild_vec_list(vec->list, vec->length);
+
+	vec->list[vec->length] = val;
+	element = (vec->list) + vec->length;	
 
 	int i;
-	for(i=1; i<window_size; i++){
-
-		if( *(element + i)!=EMPTY ){
-			swap_int(element, element+i);
-			delete_element(element+i);
-			break;
-		}
+	for(i=vec->length; i > index_to_insert; i-- ){
+		swap_int(element, element-1);
+		element = element -1;
 	}
 
-	if( i == window_size ){
+	op = check_last_index(*table);
 
-		if( *element != val_last_index ){
+	if(op == INCREASE_INDEX)
+		(*table)->length++;
 
-			int *next = element+window_size;
+	*table = rebuild_indexed_table(*table, vec->list);
 
-			if( *next == val_last_index )
-				val_last_index = *element;
-
-			swap_int(element, next);
-			delete_index(next, window_size, val_last_index);
-
-		}else
-			delete_element(element);
-
-	}
-}
-
-void delete_element(int *element){
-
-	*element = EMPTY;
-
-}
-
-
-void insert(indexed_table *table, int val){
-
-	int index, *window;
-	int empty_index, bigger_index, smaller_index;
-	boolean found_empty, found_bigger, found_smaller;
-
-	found_empty = FALSE;
-	found_bigger = FALSE;
-	found_smaller = FALSE;
-
-	if( (index = get_index(table, val)) < 0)
-		index=0;
-
-	window = table->list[index].regst;
-
-	int i;
-	for(i=0; i<table->window_size; i++){
-
-		if(window[i]==EMPTY && found_empty == FALSE){
-			empty_index = i;
-			found_empty = TRUE;
-		}
-
-		if(window[i] > val && found_bigger == FALSE){
-			bigger_index = i;
-			found_bigger = TRUE;
-		}
-
-		
-		if(window[i] > val && found_smaller == FALSE){
-			bigger_index = i;
-			found_smaller = TRUE;
-		}
-
-	}
 }
 

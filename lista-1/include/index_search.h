@@ -3,9 +3,16 @@
 
 #include <limits.h>
 
-#define EMPTY INT_MAX
+#define LAST_BLOCK INT_MAX
 
-typedef enum{TRUE=1, FALSE=0}boolean;
+#define REMOVE_INDEX 1
+#define INCREASE_INDEX 2
+#define DO_NOTHING 3
+
+typedef struct{
+	int length;
+	int *list;
+}vector;
 
 typedef struct{
 	int value;
@@ -18,20 +25,20 @@ typedef struct{
 	primary_index *list;
 }indexed_table;
 
+extern vector *create_vector(int length);
+extern int *rebuild_vec_list(int *vec_list, int length);
+extern void print_vec_list(int *vec_list);
 
-extern int *create_vec(int length);
-extern void print_vec(int *vec, int length);
-
-extern indexed_table *create_indexed_table(int *vec, int index_length, int window_size);
-extern indexed_table *rebuild_indexed_table(indexed_table *table, int *vec);
+extern indexed_table *create_indexed_table(int *vec_list, int index_length, int window_size);
+extern indexed_table *rebuild_indexed_table(indexed_table *table, int *vec_list);
 extern void print_indexed_table(indexed_table *table);
 
-extern int *search(indexed_table *table, int val);
 extern int get_index(indexed_table *table, int val);
-
-extern void delete(indexed_table *table, int val);
-extern void delete_index(int *element, int window_size, int val_last_index);
-extern void delete_element(int *element);
+extern int check_last_index(indexed_table *table);
 extern void swap_int(int *a, int *b);
+
+extern int *search(indexed_table *table, int val);
+extern void delete(indexed_table **table, vector *vec, int val);
+extern void insert(indexed_table **table, vector *vec, int val);
 
 #endif
