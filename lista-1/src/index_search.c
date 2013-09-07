@@ -150,9 +150,9 @@ int check_last_index(indexed_table *table){
 	int i;
 	for(i=0; last_index[i] != LAST_BLOCK; i++);
 
-	if(i > table->window_size)
+	if(i == table->window_size)
 		op = INCREASE_INDEX;
-	else if(!i)
+	else if(i == 1)
 		op = REMOVE_INDEX;
 	else
 		op = DO_NOTHING;
@@ -212,6 +212,12 @@ void delete(indexed_table **table, vector *vec, int val){
 	if(!element)
 		return;
 	
+	//Verifica se será necessário remover um índice
+	op = check_last_index(*table);
+
+	if(op == REMOVE_INDEX)
+		(*table)->length--;
+
 	//Desloca elemento para o fim do vetor
 	do{
 		swap_int(element, element+1);
@@ -222,12 +228,6 @@ void delete(indexed_table **table, vector *vec, int val){
 	//Remove o último elemento
 	vec->length--;
 	vec->list = rebuild_vec_list(vec->list, vec->length);
-
-	//Verifica se será necessário remover um índice
-	op = check_last_index(*table);
-
-	if(op == REMOVE_INDEX)
-		(*table)->length--;
 
 	//Reconstrói a tabela de índices e atualiza o ponteiro que aponta para tabela de índices
 	*table = rebuild_indexed_table(*table, vec->list);
@@ -262,6 +262,12 @@ void insert(indexed_table **table, vector *vec, int val){
 		index_to_insert = i + index * (*table)->window_size;
 	}
 
+	//Verifica se a janela no último índice estoura e se deve criar um novo índice
+	op = check_last_index(*table);
+
+	if(op == INCREASE_INDEX)
+		(*table)->length++;
+
 	//Cria um novo espaço no fim do vetor
 	vec->length++;
 	vec->list = rebuild_vec_list(vec->list, vec->length);
@@ -276,12 +282,6 @@ void insert(indexed_table **table, vector *vec, int val){
 		swap_int(element, element-1);
 		element = element -1;
 	}
-
-	//Verifica se a janela no último índice estoura e se deve criar um novo índice
-	op = check_last_index(*table);
-
-	if(op == INCREASE_INDEX)
-		(*table)->length++;
 
 	//Reconstrói a tabela de índices e atualiza o ponteiro que aponta para tabela de índices
 	*table = rebuild_indexed_table(*table, vec->list);
