@@ -1,7 +1,13 @@
+/* 
+	Cabeçalho ringlist.c
+
+	Cabeçalho com as definições de estruturas, constantes e assinaturas de funções para uma estrutura 'ringlist'.
+*/
+
 #ifndef RINGLIST_H
 #define RINGLIST_H
 
-// Return Codes
+// Códigos de retorno
 #define OK 1
 #define ERROR_NULL_LIST -100
 #define ERROR_MEMMORY_ALLOC -101
@@ -10,7 +16,7 @@
 #define ERROR_INVALID_CAPACITY -105
 #define ERROR_EMPTY_LIST -107
 
-// Definitions
+// Definições
 typedef enum _direction {FRONT=1, BACK=2} direction;
 typedef enum _boolean {true=1, false=0} boolean;
 typedef struct _RingList
@@ -20,7 +26,7 @@ typedef struct _RingList
 	unsigned int capacity;
 } RingList;
 
-// Public functions
+// Funções públicas
 extern RingList* ringlist_new(unsigned int capacity); 
 extern int ringlist_fill(RingList *list, unsigned long long int size);
 extern int ringlist_print(RingList *list);

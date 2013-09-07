@@ -1,5 +1,7 @@
 LOG_FILE=log/result.txt
 
+make ringlist > /dev/null 2>&1
+
 echo -e "======================================\nRunning Binary Search\n======================================" > $LOG_FILE
 bin/ringlist 10 10 1 >> $LOG_FILE
 bin/ringlist 25 45 1 >> $LOG_FILE

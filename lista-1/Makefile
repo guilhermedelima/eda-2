@@ -28,6 +28,10 @@ $(TARGET_EX1): $(OBJ)
 ringlist:
 	$(CC) $(CFLAGS) $(CINCLUDE) -o $(BINDIR)/ringlist $(SRCDIR)/ringlist.c $(SRCDIR)/test_ringlist.c -lrt
 
+# EXERCÍCIO 5/6 (com menu)
+ringlist_menu:
+	$(CC) $(CFLAGS) $(CINCLUDE) -o $(BINDIR)/ringlist_menu $(SRCDIR)/ringlist.c $(SRCDIR)/test_ringlist_menu.c -lrt
+
 clean:
 	rm -f *~ *.out
 	rm -f $(BINDIR)/*

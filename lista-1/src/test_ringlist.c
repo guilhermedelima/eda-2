@@ -1,3 +1,10 @@
+/* 
+	Módulo test_ringlist_menu.c
+
+	Programa que oferece um menu de opções para efetuar operações (inserir, preencher, remover, etc) em uma estrutura 'ringlist'.
+	Modo de uso: ./programa <FILL_RANGE> <VALUE> <SEARCH_TYPE(binary=0,interpol=1)>
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <ringlist.h>
@@ -7,6 +14,10 @@
 #define BINARY 1
 #define INTERPOL 2
 
+/* 
+	Função para cálculo de diferença de tempo entre duas 'struct timespec'.
+	Retorna o tempo em segundos.
+*/
 double diff_seconds(struct timespec start, struct timespec end)
 {
 	struct timespec temp;
@@ -40,7 +51,8 @@ int main(int argc, char** argv) {
 	printf("\nList size = %d\n", list->size);
 
 	struct timespec start, stop;
-	int response;	
+	int response;
+	printf("Searching for = %d\n", value);
 	if (stype==BINARY) {
 		clock_gettime( CLOCK_PROCESS_CPUTIME_ID, &start);
 		response = ringlist_bsearch(list, value);

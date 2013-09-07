@@ -1,9 +1,20 @@
+/* 
+	Módulo test_ringlist_menu.c
+
+	Programa que oferece um menu de opções para efetuar operações (inserir, preencher, remover, etc) em uma estrutura 'ringlist'.
+	Modo de uso: ./programa <RING_LIST_CAPACITY>
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <ringlist.h>
 #include <time.h>
 #include <unistd.h>
 
+/* 
+	Função para cálculo de diferença de tempo entre duas 'struct timespec'.
+	Retorna o tempo em segundos.
+*/
 double diff_seconds(struct timespec start, struct timespec end)
 {
 	struct timespec temp;
@@ -37,7 +48,7 @@ int main(int argc, char** argv) {
 	struct timespec start, stop;
 	double elapsed_time;
 	do {
-		printf(" (1) Print RingList\n (2) Insert new value\n (3) Remove by index\n (4) Remove by value\n (5) Bynary serch \n (6) Interpolation serch \n (7) Get by index \n (8) Fill untill the range \n (0) Exit\n");
+		printf(" (1) Print RingList\n (2) Insert new value\n (3) Remove by index\n (4) Remove by value\n (5) Binary search \n (6) Interpolation search \n (7) Get by index \n (8) Fill untill the range \n (0) Exit\n");
 			
 		printf("Your option: ");
 		scanf("%d", &option);
@@ -81,7 +92,7 @@ int main(int argc, char** argv) {
 				clock_gettime( CLOCK_PROCESS_CPUTIME_ID, &stop);
 				elapsed_time = diff_seconds(start, stop);
 				
-				printf("Binary Search time  = %lf sec\n", elapsed_time);
+				printf("Binary search time  = %lf sec\n", elapsed_time);
 				
 				break;
 			case 6:
@@ -99,7 +110,7 @@ int main(int argc, char** argv) {
 				clock_gettime( CLOCK_PROCESS_CPUTIME_ID, &stop);
 				elapsed_time = diff_seconds(start, stop);
 				
-				printf("Interpolation Search time  = %lf sec\n", elapsed_time);
+				printf("Interpolation search time  = %lf sec\n", elapsed_time);
 				
 				break;
 			case 7:
