@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include "index_search.h"
 
+/*
+  Programa para testar a busca por índices primários (Sem o uso de buracos no vetor)
+*/
 int main(int argc, char *argv[]){
 
 	if(argc != 3){
@@ -24,9 +27,11 @@ int main(int argc, char *argv[]){
 
 	window_size = vec_length/index_length ;
 
+	//Adiciona um novo índice caso a divisão não fique exata
 	if(vec_length%index_length > 0)
 		index_length++;
 
+	//Cria vetor e tabela de índices
 	vec = create_vector(vec_length); 
 	i_table = create_indexed_table(vec->list, index_length, window_size);  
 

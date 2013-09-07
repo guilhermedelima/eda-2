@@ -52,7 +52,7 @@ int main(int argc, char** argv) {
 
 	struct timespec start, stop;
 	int response;
-	printf("Searching for = %d\n", value);
+	printf("Searching for = %lld\n", value);
 	if (stype==BINARY) {
 		clock_gettime( CLOCK_PROCESS_CPUTIME_ID, &start);
 		response = ringlist_bsearch(list, value);

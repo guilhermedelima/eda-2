@@ -1,7 +1,7 @@
 Primeira Lista - EDA 2
 
- -Guilherme de Lima Bernardes
- -Matheus Souza Fonseca
+ -Guilherme de Lima Bernardes (09/0115350)
+ -Matheus Souza Fonseca (10/0054650)
 
 OBS: Executar Makefile para compilação dos exercícios.
 
@@ -21,7 +21,8 @@ Exercício para implementação da busca binária em uma lista em anel (simulada
 
  -ringlist.h
  -ringlist.c
- -menu_test_ringlist.c (main)
+ -test_ringlist_menu.c (main)
+
 
 Questão 6)
 

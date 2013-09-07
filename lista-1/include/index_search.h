@@ -1,3 +1,11 @@
+/*
+	Header que define as funções e estruturas referentes a busca por índices primários
+	Inserção e remoção não utiliza técnica de deixar buracos pelo vetor
+
+*/
+
+
+
 #ifndef SEQ_SEARCH_PK_H_INCLUDED
 #define SEQ_SEARCH_PK_H_INCLUDED
 
@@ -9,16 +17,19 @@
 #define INCREASE_INDEX 2
 #define DO_NOTHING 3
 
+//Estrutura para armazenar as informações do vetor (tamanho + valores)
 typedef struct{
 	int length;
 	int *list;
 }vector;
 
+//Estrutura para o índice primário (kindex + ponteiro para registro)
 typedef struct{
 	int value;
 	int *regst;
 }primary_index;
 
+//Estrutura que representa a tabela de índices primários
 typedef struct{
 	int length;
 	int window_size;
