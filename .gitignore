@@ -20,7 +20,7 @@
 *~
 
 # Binary path
-lista-1/bin/
+lista-1/bin/*
 
 # Log files
 lista-1/log/*
