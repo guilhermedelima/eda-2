@@ -61,68 +61,101 @@ void print_list(linked_list *list){
 
 }
 
+void swap_nodes(node *a, node *b, linked_list *list){
 
-void remove_node(node *src, linked_list *list){
+	node *a_ant = a->prev;
+	node *a_suc = a->next;
 
-	node *ant, *suc;
+	node *b_ant = b->prev;
+	node *b_suc = b->next;
 
-	ant = src->prev;
-	suc = src->next;
+	a->next = b_suc;
+	a->prev = b_ant;
 
-	if(ant)
-		ant->next = suc;
-	else{
-		
-		list->head = suc;
+	b->next = a_suc;
+	b->prev = a_ant;
 
-	}
-
-	if(suc)
-		suc->prev = ant;
+	if(!a_ant)
+		list->head = b;
 	else
-		list->tail = ant;
+		a_ant->next = b;
 
-}
+	if(!a_suc)
+		list->tail = b;
+	else
+		a_suc = b;
 
-void insert_behind_pivot(node *pivot, node *smaller){
+	if(!b_ant)
+		list->head = a;
+	else
+		b_ant->next = a;
 
-	pivot_ant = pivot->prev;
+	if(!b_suc)
+		list->tail = a;
+	else
+		b_suc = a;
 	
-	if(pivot_ant)
-		
-
-	
-	pivot->prev = smaller
-
-
-
-
 }
 
 
 void quick_sort(linked_list *list){
 
-	order_pivot(list->head, list->tail);	
+	quick_sort_partition(list->head, list->tail, list->length, list);	
 
 }
 
-node *order_pivot(node *init, node *end){
+void quick_sort_partition(node *init, node *end, int offset, linked_list *list){
 
-	node *pivot, *temp;
+	order_partition(init, end, offset, list);
 
+
+
+}
+
+void order_partition(node *init, node *end, int offset, linked_list *list){
+
+	int median;
+	node *pivot, *old_median;
+
+	old_median = init;
 	pivot = find_pivot(init, end);
+	median = (offset+1)/2;
+	
+	int i;
+	for(i=0; i<median-1; i++)
+		old_median = old_median->next;
 
-	for(temp=init; temp!=end->next; temp=end){
+	if(pivot != old_median){
+		swap_nodes(pivot, old_median, list);
 
-		if(temp->value < pivot->value){
-			
+		if(pivot == end)
+			end = old_median;
 
+		if(pivot == init)
+			init = old_median;
 
-
-
-		}
 	}
 
+	printf("PIVOT: %d\n", pivot->value);
+	printf("OLD MEDIAN: %d\n", old_median->value);
+		
+	node *temp, *aux;
+	for(temp=init; temp != pivot; temp=temp->next){
+
+		if(temp->value > pivot->value){
+
+			printf("Found %d to change\n", temp->value);
+			
+			while(end->value >= pivot->value)
+				end = end->next;
+
+			swap_nodes(temp, end, list);
+
+			aux = end;
+			end = temp;
+			temp = aux;
+		}
+	}
 
 }
 

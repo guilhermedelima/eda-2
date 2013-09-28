@@ -24,7 +24,7 @@ int main(int argc, char *argv[]){
 
 	//print_vector(vec, length);
 
-	printf("TIME: %f\n", (float) (end-init) / (float) CLOCKS_PER_SEC);
+	printf("%f\n", (float) (end-init) / (float) CLOCKS_PER_SEC);
 
 
 	return 0;

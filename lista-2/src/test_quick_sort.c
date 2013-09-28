@@ -17,6 +17,7 @@ int main(int argc, char *argv[]){
 
 	print_list(list);
 	quick_sort(list);
+	print_list(list);
 
 	return 0;
 }
