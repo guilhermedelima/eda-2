@@ -42,7 +42,7 @@ int main(int argc, char *argv[]) {
 	if (is_demo == 'N' || is_demo == 'n') {
 		struct timespec start, stop;
 		double delta_local, delta_separated;
-		
+
 		vector_fill(v);
 		clock_gettime( CLOCK_PROCESS_CPUTIME_ID, &start);
 		vector_heapsort(v);

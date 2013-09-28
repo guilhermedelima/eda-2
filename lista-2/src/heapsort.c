@@ -17,8 +17,8 @@ Vector* vector_new(unsigned int capacity) {
 } 
 
 int _vector_increase(Vector *v) {
-	if(!v)
-		return ERROR_NULL_VECTOR;
+	// if(!v)
+	// 	return ERROR_NULL_VECTOR;
 
 	v->v = realloc(v->v, v->capacity * 2);
 
@@ -30,8 +30,9 @@ inline int _l_son (int i) {return (2*i) + 1;}
 inline int _parent(int i) {return (i-1) / 2;}
 
 int vector_insert(Vector *v, int val) {
-	if (!v) 
-		return ERROR_NULL_VECTOR;
+	// if (!v) 
+	// 	return ERROR_NULL_VECTOR;
+	
 	if (v->size == v->capacity)
 		_vector_increase(v);
 
@@ -42,8 +43,8 @@ int vector_insert(Vector *v, int val) {
 }
 
 int vector_fill(Vector *v) {
-	if (!v) 
-		return ERROR_NULL_VECTOR;
+	// if (!v) 
+	// 	return ERROR_NULL_VECTOR;
 
 	srand(time(0));
 
@@ -55,8 +56,8 @@ int vector_fill(Vector *v) {
 }
 
 int vector_print(Vector *v) {
-	if(!v)
-		return ERROR_NULL_VECTOR;
+	// if(!v)
+	// 	return ERROR_NULL_VECTOR;
 	
 	if(v->size == 0) {
 		printf("[]\n");
@@ -82,12 +83,12 @@ inline int _swap(int *a, int *b) {
 }
 
 int _vector_heapify(Vector *v, int heapsize, int index) {
-	if(!v) 
-		return ERROR_NULL_VECTOR;
-	if(!v->size)
-		return ERROR_EMPTY_VECTOR;
-	if(index >= v->size)
-		return ERROR_INVALID_INDEX;
+	// if(!v) 
+	// 	return ERROR_NULL_VECTOR;
+	// if(!v->size)
+	// 	return ERROR_EMPTY_VECTOR;
+	// if(index >= v->size)
+	// 	return ERROR_INVALID_INDEX;
 
 	int left, right, biggest;
 	left = _l_son(index);
@@ -110,10 +111,10 @@ int _vector_heapify(Vector *v, int heapsize, int index) {
 }
 
 int _vector_build_heap(Vector *v) {
-	if(!v)
-		return ERROR_NULL_VECTOR;
-	if(!v->size)
-		return ERROR_EMPTY_VECTOR;
+	// if(!v)
+	// 	return ERROR_NULL_VECTOR;
+	// if(!v->size)
+	// 	return ERROR_EMPTY_VECTOR;
 
 	int i;
 	
@@ -125,10 +126,10 @@ int _vector_build_heap(Vector *v) {
 }
 
 int vector_heapsort(Vector *v) {
-	if(!v)
-		return ERROR_NULL_VECTOR;
-	if(!v->size)
-		return ERROR_EMPTY_VECTOR;
+	// if(!v)
+	// 	return ERROR_NULL_VECTOR;
+	// if(!v->size)
+	// 	return ERROR_EMPTY_VECTOR;
 
 	int heapsize = v->size;
 	
@@ -145,10 +146,10 @@ int vector_heapsort(Vector *v) {
 }
 
 int heap_insert(Vector *h, int val) {
-	if(!h)
-		return ERROR_NULL_VECTOR;
-	if(h->size == h->capacity)
-		_vector_increase(h);
+	// if(!h)
+	// 	return ERROR_NULL_VECTOR;
+	// if(h->size == h->capacity)
+	// 	_vector_increase(h);
 
 	int temp = h->size;
 	while (temp > 0 && h->v[_parent(temp)] < val) {
@@ -161,59 +162,57 @@ int heap_insert(Vector *h, int val) {
 	return OK;
 }
 
-int heap_remove_max(Vector *h, int *removed_val) {
-	if(!h)
-		return ERROR_NULL_VECTOR;
-	if(!h->size)
-		return ERROR_EMPTY_VECTOR;
+int heap_remove_max(Vector *h) {
+	// if(!h)
+	// 	return ERROR_NULL_VECTOR;
+	// if(!h->size)
+	// 	return ERROR_EMPTY_VECTOR;
 
-	*removed_val = h->v[0];
+	int removed_val = h->v[0];
 	h->v[0] = h->v[h->size-1];
 	h->size--;
 	_vector_heapify(h, h->size, 0);
 
-	return OK;
+	return removed_val;
 }
 
 int heap_fill(Vector *h) {
-	if (!h) 
-		return ERROR_NULL_VECTOR;
+	// if (!h) 
+	// 	return ERROR_NULL_VECTOR;
 
 	srand(time(0));
 
 	unsigned int i;
 	for(i = 0; i < h->capacity; i++) 
-		heap_insert(h, rand() % (h->capacity*10));
+		heap_insert(h, rand() % (h->capacity));
 
 	return OK;
 }
 
 int _vector_revert(Vector *v) {
-	if(!v)
-		return ERROR_NULL_VECTOR;
-	if(!v->size)
-		return ERROR_EMPTY_VECTOR;
+	// if(!v)
+	// 	return ERROR_NULL_VECTOR;
+	// if(!v->size)
+	// 	return ERROR_EMPTY_VECTOR;
 
 	int i, j;
 	for (i = 0, j = v->size-1; i < j; i++, j--)
 		_swap(&v->v[i], &v->v[j]);
 	
-		
-
 	return OK;
 }
 
 int heap_move_roots_to_vector(Vector *h, Vector *v) {
-	if (!h || !v) 
-		return ERROR_NULL_VECTOR;	
-	if(!h->size)
-		return ERROR_EMPTY_VECTOR;
+	// if (!h || !v) 
+	// 	return ERROR_NULL_VECTOR;	
+	// if(!h->size)
+	// 	return ERROR_EMPTY_VECTOR;
 	
 	int max;
 	int i;
 	int heap_pre_size = h->size;
 	for (i = 0; i < heap_pre_size; i++) {
-		heap_remove_max(h, &max);
+		max = heap_remove_max(h);
 		vector_insert(v, max);
 	}
 	_vector_revert(v);

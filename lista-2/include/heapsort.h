@@ -34,7 +34,7 @@ extern int vector_heapsort(Vector *v);
 // Modo com estrutura separada
 extern int heap_insert(Vector *h, int val);
 extern int heap_fill(Vector *h);
-extern int heap_remove_max(Vector *h, int *removed_val);
+extern int heap_remove_max(Vector *h);
 extern int heap_move_roots_to_vector(Vector *h, Vector *v);
 
 #endif
