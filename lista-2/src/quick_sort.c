@@ -107,12 +107,13 @@ void quick_sort(linked_list *list){
 void quick_sort_partition(node *init, node *end, int offset, linked_list *list){
 
 	order_partition(init, end, offset, list);
-
+	//quick_sort_partition(esquerda);
+	//quick_sort_partition(direita);
 
 
 }
 
-void order_partition(node *init, node *end, int offset, linked_list *list){
+node *order_partition(node *init, node *end, int offset, linked_list *list){
 
 	int median;
 	node *pivot, *old_median;
@@ -135,16 +136,11 @@ void order_partition(node *init, node *end, int offset, linked_list *list){
 			init = old_median;
 
 	}
-
-	printf("PIVOT: %d\n", pivot->value);
-	printf("OLD MEDIAN: %d\n", old_median->value);
 		
 	node *temp, *aux;
 	for(temp=init; temp != pivot; temp=temp->next){
 
 		if(temp->value > pivot->value){
-
-			printf("Found %d to change\n", temp->value);
 			
 			while(end->value >= pivot->value)
 				end = end->next;
@@ -156,6 +152,8 @@ void order_partition(node *init, node *end, int offset, linked_list *list){
 			temp = aux;
 		}
 	}
+	
+	return pivot;
 
 }
 

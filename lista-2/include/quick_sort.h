@@ -26,7 +26,7 @@ extern void print_list(linked_list *list);
 extern void swap_nodes(node *a, node *b, linked_list *list);
 extern void quick_sort(linked_list *list);
 extern void quick_sort_partition(node *init, node *end, int offset, linked_list *list);
-extern void order_partition(node *init, node *end, int offset, linked_list *list);
+extern node *order_partition(node *init, node *end, int offset, linked_list *list);
 extern node *find_pivot(node *init, node *end);
 
 
