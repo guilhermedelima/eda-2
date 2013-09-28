@@ -161,47 +161,6 @@ int heap_insert(Vector *h, int val) {
 	return OK;
 }
 
-/*FindMinInMaxHeap(Heap heap)
-   startIndex = heap->Array[heap->lastIndex/2]
-   if startIndex == 0
-          return heap->Array[startIndex]
-   Minimum = heap->Array[startIndex + 1]
-   for count from startIndex+2 to heap->lastIndex
-            if(heap->Array[count] < Minimum)
-                Minimum := heap->Array[count]
-   print Minimum */
-
-// int heap_remove_min(Vector *h, int *removed_val) {
-// 	if(!h)
-// 		return ERROR_NULL_VECTOR;
-// 	if(!h->size)
-// 		return ERROR_EMPTY_VECTOR;
-
-// 	int start = _parent(h->size);
-// 	if (start == 0) {
-// 		*removed_val = h->v[start];
-// 		h->v[start] = 0;
-// 		return OK;
-// 	}
-
-// 	int min_index = start + 1;
-// 	int min = h->v[min_index];
-// 	int i;
-	
-// 	for (i = start+2; i < h->size; i++) {
-// 		if(h->v[i] < min) {
-// 			min = h->v[i];
-// 			min_index = i;
-// 		}
-// 		printf("MIN %d\n", min);		
-// 	}
-
-// 	*removed_val = min;
-// 	h->v[min_index] = 0;
-
-// 	return OK;
-// }
-
 int heap_remove_max(Vector *h, int *removed_val) {
 	if(!h)
 		return ERROR_NULL_VECTOR;
@@ -211,7 +170,7 @@ int heap_remove_max(Vector *h, int *removed_val) {
 	*removed_val = h->v[0];
 	h->v[0] = h->v[h->size-1];
 	h->size--;
-	_vector_build_heap(h);
+	_vector_heapify(h, h->size, 0);
 
 	return OK;
 }
@@ -229,7 +188,7 @@ int heap_fill(Vector *h) {
 	return OK;
 }
 
-int vector_revert(Vector *v) {
+int _vector_revert(Vector *v) {
 	if(!v)
 		return ERROR_NULL_VECTOR;
 	if(!v->size)
@@ -257,7 +216,7 @@ int heap_move_roots_to_vector(Vector *h, Vector *v) {
 		heap_remove_max(h, &max);
 		vector_insert(v, max);
 	}
-	vector_revert(v);
+	_vector_revert(v);
 
 	return OK;
 }
