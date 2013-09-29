@@ -16,6 +16,7 @@ linked_list *create_list(){
 	return list;
 }
 
+
 void fill_list(linked_list *list, int length){
 
 	int i, val;
@@ -169,7 +170,7 @@ void quick_sort(linked_list *list){
 
 void quick_sort_partition(node *init, node *end, linked_list *list){
 
-	if(init && end && init != end){
+	if(init && end && init != end && init->prev != end){
 
 		partition_args arg;
 		arg = order_partition(init, end, list);
@@ -184,8 +185,8 @@ void quick_sort_partition(node *init, node *end, linked_list *list){
 		printf("End of this part: %d\n", end->value);
 		printf("Pivot of this part: %d\n\n", pivot->value);
 
-		//quick_sort_partition(init, pivot->prev, list);
-		//quick_sort_partition(pivot->next, end, list);
+		quick_sort_partition(init, pivot->prev, list);
+		quick_sort_partition(pivot->next, end, list);
 
 	}
 
@@ -199,6 +200,10 @@ partition_args order_partition(node *init, node *end, linked_list *list){
 	pivot = find_pivot(init, end);
 
 	swap_nodes(pivot, end, list);
+
+	if(pivot == init)
+		init = end;
+
 	end = pivot;
 
 	for(temp=init; temp != end; temp=temp->next){
