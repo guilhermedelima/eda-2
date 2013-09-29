@@ -15,8 +15,12 @@ int main(int argc, char *argv[]){
 	list = create_list();
 	fill_list(list, atoi( argv[1] ));
 
+	printf("Before: ");
 	print_list(list);
+
 	quick_sort(list);
+
+	printf("After: ");
 	print_list(list);
 
 	return 0;
