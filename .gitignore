@@ -20,9 +20,5 @@
 *~
 
 # Binary path
-lista-1/bin/*
-lista-2/bin/*
+**/bin/*
 
-
-# Log files
-lista-1/log/*
