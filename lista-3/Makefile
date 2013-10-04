@@ -9,12 +9,15 @@ CFLAGS=-W -Wall -I $(INCDIR)
 
 
 TARGET_1=merge_sort
+TARGET_2=bucket_sort
 
-_HEADER=merge_sort.h
+_HEADER=merge_sort.h bucket_sort.h
 _OBJ1=merge_sort.o test_merge_sort.o
+_OBJ2=bucket_sort.o test_bucket_sort.o
 
 HEADER=$(patsubst %,$(INCDIR)/%,$(_HEADER))
 OBJ1=$(patsubst %,$(OBJDIR)/%,$(_OBJ1))
+OBJ2=$(patsubst %,$(OBJDIR)/%,$(_OBJ2))
 
 ######### TARGETS ##########
 
@@ -26,6 +29,10 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.c $(HEADER)
 
 
 $(TARGET_1): $(OBJ1)
+	$(CC) $(CFLAGS) -o $(BINDIR)/$@ $^
+
+
+$(TARGET_2): $(OBJ2)
 	$(CC) $(CFLAGS) -o $(BINDIR)/$@ $^
 
 

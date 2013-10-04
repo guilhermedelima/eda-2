@@ -32,7 +32,17 @@ void merge_sort(int init, int end, int *vec){
 		merge_sort(init, middle, vec);
 		merge_sort(middle+1, end, vec);
 
+		printf("\nMERGE\n");
+		printf("VECTOR A - ");
+		print_vector(vec+init, middle-init+1);
+		printf("VECTOR B - ");
+		print_vector(vec+middle+1, end-(middle+1)+1);
+
 		merge(init, end, middle, vec);
+	
+		printf("MERGE VECTOR - ");
+		print_vector(vec+init, end-init+1);
+
 	}
 
 }

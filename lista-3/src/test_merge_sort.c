@@ -17,7 +17,7 @@ int main(int argc, char *argv[]){
 
 	merge_sort(0, length-1, vec);
 
-	printf("After - ");
+	printf("\nAfter - ");
 	print_vector(vec, length);	
 
 	return 0;
