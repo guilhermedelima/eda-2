@@ -21,7 +21,7 @@ OBJ2=$(patsubst %,$(OBJDIR)/%,$(_OBJ2))
 
 ######### TARGETS ##########
 
-all: $(TARGET_1)
+all: $(TARGET_1) $(TARGET_2)
 
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c $(HEADER)
