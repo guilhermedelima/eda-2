@@ -22,7 +22,10 @@ void print_vector(int *vec, int length){
 	printf("]\n");
 }
 
-
+/*
+  Divide o vetor ao meio e realiza recursividade para cada metade do vetor
+  Em seguida aplica o merge das duas metades
+*/
 void merge_sort(int init, int end, int *vec){
 
 	if(end > init){
@@ -44,10 +47,11 @@ void merge_sort(int init, int end, int *vec){
 		print_vector(vec+init, end-init+1);
 
 	}
-
 }
 
-
+/*
+  Funcao que organiza as duas partes ordenadas do vetor (int até middle | middle+1 até end)
+*/
 void merge(int init, int end, int middle, int *vec){
 
 	int size;
@@ -60,6 +64,7 @@ void merge(int init, int end, int middle, int *vec){
 	j=middle+1;
 	count_temp=0;
 
+	/* Compara os valores das duas partes do vetor e armazena no vetor auxiliar */
 	while(i <= middle && j <= end){
 
 		if(vec[i] > vec[j]){
@@ -71,6 +76,10 @@ void merge(int init, int end, int middle, int *vec){
 		}
 		count_temp++;
 	}
+
+	/* Caso uma das partes nao tenha sido totalmente copiada para o vetor auxiliar 
+	   ela sera feita nos laços abaixo
+	*/
 
 	while(i <= middle){
 		temp[count_temp] = vec[i];
@@ -84,6 +93,7 @@ void merge(int init, int end, int middle, int *vec){
 		count_temp++;
 	}
 
+	/* Copiar o vetor auxiliar ordenado para o original */
 	for(k=init; k <= end; k++)
 		vec[k] = temp[k-init];	
 

@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define MAX_KEY 50
+#define MAX_KEY 101 /* Random smaller than 100 */
 
 
 extern int *create_vector(int length);
