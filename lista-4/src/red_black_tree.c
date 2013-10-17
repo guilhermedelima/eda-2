@@ -196,8 +196,8 @@ void right_rotate(node *n, node **root){
 /* 
   Função para inserir um nó na árvore. São tratados os seguintes casos
   1: Nó é a raiz
-  2: Pai do nó é preto
-  3: Pai do Nó é vermellho e tio também
+  2: Pai do nó é preto (Não precisa consertar árvore)
+  3: Pai do Nó é vermellho e tio também (Muda cor de avô e continua verificando casos 3, 4 e 5)
   4: Pai do Nó é vermellho e tio preto (Pai e filho tem mesmas "direções" - Rotação dupla (1 + caso 5))
   5: Pai do Nó é vermellho e tio preto (Pai e filho diferentes "direções" - 1 rotação )
 
