@@ -56,8 +56,7 @@ extern void fix_red_dad(node *n, node **root);
 extern void fix_red_uncle(node *n, node *u, node *g);
 extern node *fix_with_rotations(node *n, node *g, node **root);
 
-extern void delete(node **root, int val);
-extern node* search(node **root, int val);
+
 
 #endif
 
