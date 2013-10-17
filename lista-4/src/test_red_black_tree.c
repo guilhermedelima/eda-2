@@ -9,14 +9,6 @@ int main(void){
 	rb_tree *tree;
 	tree = create_tree();
 
-	insert(&tree->root, 200);
-	insert(&tree->root, 100);
-	insert(&tree->root, 350);
-	print_tree(tree->root);
-
-	//delete(tree, 200);
-	//print_tree(tree->root);
-
 	int op, val;
 	char end;
 

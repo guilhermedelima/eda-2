@@ -1,6 +1,5 @@
 #include "red_black_tree.h"
 
-
 /* Constante para representar o vetor de cores que são acessados de acordo com o tipo BLACK ou RED */
 const char *shell_colors[] = { ANSI_BLACK, ANSI_RED };
 
@@ -332,7 +331,6 @@ node *fix_with_rotations(node *n, node *g, node **root){
 	return n;
 }
 
-//
 
 void swap_key(int *a, int *b){
 
@@ -406,6 +404,8 @@ void delete(rb_tree *tree, int val){
 
 void delete_leaf(node *n, node **root){
 
+	printf("DELETE LEAF %d\n", n->value);
+
 	if(n->color == BLACK)
 		delete_case1(n, root);
 
@@ -418,6 +418,8 @@ void delete_leaf(node *n, node **root){
 
 
 void delete_one_child(node *n, node **root){
+
+	printf("DELETE NODE WITH ONE KID %d\n", n->value);
 
 	node *child;
 	child = (n->left == nill) ? n->right : n->left;
@@ -432,10 +434,11 @@ void delete_one_child(node *n, node **root){
 	}
 
 	if(n->color == BLACK){
+		
 		if(child->color == RED)
 			child->color = BLACK;			
-		else
-			delete_case1(child, root);
+		
+		delete_case1(child, root);
 	}
 
 }
@@ -446,7 +449,7 @@ void delete_case1(node *n, node **root){
 	
 	printf("caso 1\n");
 
-	if (n->parent == NULL) {
+	if (!n->parent) {
 		*root = n;
 		return;	
 	}else
@@ -556,3 +559,59 @@ void delete_case6(node *n, node **root){
 }
 
 
+void verify_property_1(node *n) {
+        assert(n->color == RED || n->color == BLACK);
+        if(n == nill) return;
+        verify_property_1(n->left);
+        verify_property_1(n->right);
+}
+
+void verify_property_2(node *root) {
+        assert(root->color == BLACK);
+}
+
+void verify_property_4(node *n) {
+        if (n->color == RED) {
+                assert (n->left->color   == BLACK);
+                assert (n->right->color  == BLACK);
+                assert (n->parent->color == BLACK);
+        }
+        if(n == nill) return;
+        verify_property_4(n->left);
+        verify_property_4(n->right);
+}
+
+
+void _verify_property_5(node *n, int black_count, int* path_black_count) {
+        if (n->color == BLACK) {
+        black_count++;
+        }
+        if (n == nill) {
+                if (*path_black_count == -1) {
+                        *path_black_count = black_count;
+                } else {
+                        assert(black_count == *path_black_count);
+                }
+                return;
+        }
+        _verify_property_5(n->left,  black_count, path_black_count);
+        _verify_property_5(n->right, black_count, path_black_count);
+}
+
+void verify_property_5(node *root) {
+    int black_count_path = -1;
+    _verify_property_5(root, 0, &black_count_path);
+}
+
+void verify_properties(node **root) {
+        printf("Init of red black tree verification\n");
+        printf("Property 1\n");
+        verify_property_1(*root);
+        printf("Property 2\n");
+        verify_property_2(*root);
+        printf("Property 4\n");
+        verify_property_4(*root);
+        printf("Property 5\n");
+        verify_property_5(*root);
+        printf("End of red black tree verification\n"); 
+}

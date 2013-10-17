@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 
 #define ANSI_RED	"\x1b[31m"
 #define ANSI_BLACK	"\033[22;30m"
@@ -15,10 +16,6 @@ typedef enum{
 typedef enum{
 	BLACK, RED
 }node_color;
-
-typedef enum{
-	TRUE=1, FALSE=0
-}boolean;
 
 struct node_rbt{
 	int value;
@@ -75,6 +72,9 @@ extern void delete_case3(node *n, node **root);
 extern void delete_case4(node *n, node **root);
 extern void delete_case5(node *n, node **root);
 extern void delete_case6(node *n, node **root);
+
+extern void verify_properties(node **root);
+
 
 #endif
 
