@@ -1,10 +1,13 @@
 #include "red_black_tree.h"
 
 const char *shell_colors[] = { ANSI_BLACK, ANSI_RED };
-node nill_val = {0, black, NULL, NULL, NULL};
-node *nill = &nill_val;
+const node nill_val = {0, BLACK, NULL, NULL, NULL};
+const node *nill = &nill_val;
 
 
+/*
+  Função para criar uma árvore com raiz nula
+*/
 rb_tree *create_tree(){
 
 	rb_tree *tree;
@@ -77,10 +80,10 @@ node *create_node(int val){
 	n = (node *) malloc(sizeof(node));
 
 	n->value = val;
-	n->color = red;
+	n->color = RED;
 	n->parent = NULL;
-	n->left = nill;
-	n->right = nill;
+	n->left = (node *) nill;
+	n->right = (node *) nill;
 
 	return n;
 }
@@ -168,7 +171,7 @@ void insert(node **root, int val){
 	
 		new_node = insert_node(dad, val);
 
-		if(dad->color == red)
+		if(dad->color == RED)
 			fix_red_dad(new_node, root);
 			
 	}
@@ -179,7 +182,7 @@ void insert(node **root, int val){
 void insert_root(node **root, int val){
 
 	*root = create_node(val);
-	(*root)->color = black;
+	(*root)->color = BLACK;
 
 }
 
@@ -197,37 +200,21 @@ node *insert_node(node *dad, int val){
 	return n;
 }
 
+
 void fix_red_dad(node *n, node **root){
 
 
-	while(n->parent && n->parent->color == red){
+	while(n->parent && n->parent->color == RED){
 
 		node *u, *g;
 		u = get_uncle(n);
 		g = get_grand(n);
 
-		if(u->color == red){
+		if(u->color == RED){
 			fix_red_uncle(n, u, g);
 			n = g;
-		}else{
-
-			direction n_dir, p_dir;
-
-			n_dir = get_node_direction(n);
-			p_dir = get_node_direction(n->parent);
-
-			if(p_dir == n_dir){
-				n = n->parent;
-
-				if(p_dir == LEFT)
-					left_rotate(n, root);			
-				else
-					right_rotate(n, root);
-			}
-			
-			
-
-		}
+		}else
+			n = fix_with_rotations(n, g, root);
 
 	}
 
@@ -235,9 +222,44 @@ void fix_red_dad(node *n, node **root){
 
 void fix_red_uncle(node *n, node *u, node *g){
 
-	u->color = black;
-	n->parent->color = black;
-	g->color = (!g->parent) ? black : red ;
+	u->color = BLACK;
+	n->parent->color = BLACK;
+	g->color = (!g->parent) ? BLACK : RED ;
 
 }
+
+node *fix_with_rotations(node *n, node *g, node **root){
+
+	direction n_dir, p_dir;
+	n_dir = get_node_direction(n);
+	p_dir = get_node_direction(n->parent);
+
+	if(p_dir != n_dir){
+		n = n->parent;
+
+		if(p_dir == LEFT && n_dir == RIGHT)
+			left_rotate(n, root);			
+		else if(p_dir == RIGHT && n_dir == LEFT)
+			right_rotate(n, root);
+	}
+	
+	n->parent->color = BLACK;
+	g->color = RED;
+
+	n_dir = get_node_direction(n);
+	p_dir = get_node_direction(n->parent);
+
+	if(p_dir == LEFT && n_dir == LEFT)
+		right_rotate(g, root);
+	else if(p_dir == RIGHT && n_dir == RIGHT)
+		left_rotate(g, root);
+
+	return n;
+}
+
+
+
+
+
+
 

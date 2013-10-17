@@ -13,7 +13,7 @@ typedef enum{
 }direction;
 
 typedef enum{
-	black, red
+	BLACK, RED
 }node_color;
 
 struct node_rbt{
@@ -33,8 +33,8 @@ typedef struct{
 
 
 extern const char *shell_colors[];
-extern node nill_val;
-extern node *nill;
+extern const node nill_val;
+extern const node *nill;
 
 extern rb_tree *create_tree();
 extern void print_node(node *n, int level);
@@ -53,6 +53,8 @@ extern void insert_root(node **root, int val);
 extern node *insert_node(node *dad, int val);
 extern void fix_red_dad(node *n, node **root);
 extern void fix_red_uncle(node *n, node *u, node *g);
+extern node *fix_with_rotations(node *n, node *g, node **root);
+
 
 #endif
 
