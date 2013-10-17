@@ -28,7 +28,6 @@ $(TARGET): $(OBJ)
 	$(CC) $(CFLAGS) -o $(BINDIR)/$@ $^
 
 
-
 clean:
 	rm -f *~ *.out
 	rm -f $(OBJDIR)/*
