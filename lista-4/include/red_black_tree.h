@@ -16,6 +16,10 @@ typedef enum{
 	BLACK, RED
 }node_color;
 
+typedef enum{
+	TRUE=1, FALSE=0
+}boolean;
+
 struct node_rbt{
 	int value;
 	node_color color;
@@ -56,8 +60,21 @@ extern void fix_red_dad(node *n, node **root);
 extern void fix_red_uncle(node *n, node *u, node *g);
 extern node *fix_with_rotations(node *n, node *g, node **root);
 
-extern void delete(node **root, int val);
-extern node* search(node **root, int val);
+extern void swap_key(int *a, int *b);
+extern node *search(node *root, int val);
+extern node *get_left_max(node *n);
+extern node *get_sibling(node *n);
+
+extern void delete(rb_tree *tree, int val);
+extern void delete_leaf(node *n, node **root);
+extern void delete_one_child(node *n, node **root);
+
+extern void delete_case1(node *n, node **root);
+extern void delete_case2(node *n, node **root);
+extern void delete_case3(node *n, node **root);
+extern void delete_case4(node *n, node **root);
+extern void delete_case5(node *n, node **root);
+extern void delete_case6(node *n, node **root);
 
 #endif
 
