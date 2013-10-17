@@ -332,3 +332,189 @@ node *fix_with_rotations(node *n, node *g, node **root){
 	return n;
 }
 
+node * search(node **root, int val) {
+	node *n = *root;
+	
+	while (n != nill) {
+		if (n->value == val)
+			return n;
+		else if (val < n->value)
+			n = n->left;
+		else if (val > n->value)
+			n = n->right;
+	}
+	
+	return NULL;
+}
+
+node * minimum_node(node *n) {
+	if(n == nill)
+		return n;
+
+	node * temp = n;
+	while (temp->left != nill) {
+		temp = temp->left;
+	}
+
+	return temp;
+}
+
+node *get_sibling(node *n) {
+	if (n->parent == NULL) 
+		return NULL;
+
+	direction dir = get_node_direction(n);
+
+	return (dir == LEFT) ? n->parent->right : n->parent->left;
+}
+
+void delete_case6(node *n, node **root)
+{
+	node *sibling = get_sibling(n);
+
+	sibling->color = n->parent->color;
+	n->parent->color = BLACK;
+
+	printf("caso 6\n");
+	if (n == n->parent->left) {
+		sibling->right->color = BLACK;
+		left_rotate(n->parent, root);
+	} else {
+		sibling->left->color = BLACK;
+		right_rotate(n->parent, root);
+	}
+}
+
+void delete_case5(node *n, node **root)
+{
+	node *sibling = get_sibling(n);
+
+	printf("caso 5\n");
+	if  (sibling->color == BLACK) { 
+		if ((n == n->parent->left) &&
+			(sibling->right->color == BLACK) &&
+			(sibling->left->color == RED)) { 
+			sibling->color = RED;
+			sibling->left->color = BLACK;
+			right_rotate(sibling, root);
+		} else if ((n == n->parent->right) &&
+				    (sibling->left->color == BLACK) &&
+				    (sibling->right->color == RED)) {
+			sibling->color = RED;
+			sibling->right->color = BLACK;
+			left_rotate(sibling, root);
+		}
+	}
+	delete_case6(n, root);
+}
+
+void delete_case4(node *n, node **root)
+{
+	node *sibling = get_sibling(n);
+
+	printf("caso 4\n");
+	if ((n->parent->color == RED) &&
+		(sibling->color == BLACK) &&
+		(sibling->left->color == BLACK) &&
+		(sibling->right->color == BLACK)) {
+	sibling->color = RED;
+	n->parent->color = BLACK;
+	} else {
+
+		delete_case5(n, root);	
+	}
+	
+}
+
+void delete_case1(node *n, node **root);
+void delete_case3(node *n, node **root)
+{
+	node *sibling = get_sibling(n);
+
+	printf("caso 3\n");
+	if ((n->parent->color == BLACK) &&
+		(sibling->color == BLACK) &&
+		(sibling->left->color == BLACK) &&
+		(sibling->right->color == BLACK)) {
+
+		sibling->color = RED;
+		delete_case1(n->parent, root);
+	} else {
+		delete_case4(n, root);
+	}
+}
+
+void delete_case2(node *n, node **root)
+{
+	node *sibling = get_sibling(n);
+
+	printf("caso 2\n");
+	if (sibling->color == RED) {
+		n->parent->color = RED;
+		sibling->color = BLACK;
+		if (n == n->parent->left)
+			left_rotate(n->parent, root);
+		else
+			right_rotate(n->parent, root);
+	}
+	delete_case3(n, root);
+}
+void delete_case1(node *n, node **root) {
+	printf("caso 1\n");
+	if (n->parent == NULL) {
+		return;
+	} else {
+		delete_case2(n, root);
+	}
+}
+
+void delete(node **root, int val) {
+	
+    if(!*root)
+		return;
+
+	node *n = search(root, val);
+	if (n == NULL) return;
+
+	node *delete;
+	if (n->right == nill && n->left == nill) {
+		direction n_dir =  get_node_direction(n);
+		if (n_dir == LEFT)
+			n->parent->left = (node *) nill;
+		else if (n_dir == RIGHT)
+			n->parent->right = (node *) nill;
+
+		delete = n;
+	} else if (n->left != nill && n->right != nill) {
+		node * min_right = minimum_node(n->right);
+		n->value = min_right->value;
+		
+		direction dir = get_node_direction(min_right);
+		if (dir == LEFT) {
+			min_right->parent->left = (node *) nill;
+		} else {
+			min_right->parent->right = (node *) nill;
+		}
+        
+        delete = min_right;
+	} else {
+		node * child = (n->right != nill) ? n->right : n->left;
+		direction n_dir =  get_node_direction(n);
+		if (n_dir == LEFT)
+			n->parent->left = child;
+		else if (n_dir == RIGHT)
+			n->parent->right = child;
+
+		delete = n;
+	}
+	
+	node * child = n->right == NULL ? n->left  : n->right;
+    if (n->color == BLACK) {
+    	if (child->color == RED) 
+        	child->color = BLACK;
+        else
+        	delete_case1(n, root);
+    }
+
+	free(delete);
+}
