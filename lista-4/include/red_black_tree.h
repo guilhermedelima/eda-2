@@ -58,6 +58,7 @@ extern node *fix_with_rotations(node *n, node *g, node **root);
 
 extern void delete(node **root, int val);
 extern node* search(node **root, int val);
+extern void verify_properties(node **root);
 
 #endif
 

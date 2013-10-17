@@ -44,17 +44,26 @@ int main(void){
 
 
 	// }while(end == 'Y' || end == 'y');
+	insert(&tree->root, 20);
+	insert(&tree->root, 190);
+	insert(&tree->root, 247);
+	insert(&tree->root, 77);
+	insert(&tree->root, 250);
+	insert(&tree->root, 385);
+	insert(&tree->root, 230);
 	insert(&tree->root, 200);
 	insert(&tree->root, 100);
-	insert(&tree->root, 350);
-	insert(&tree->root, 150);
-	insert(&tree->root, 370);
+	
 	insert(&tree->root, 225);
+	insert(&tree->root, 4);
+	insert(&tree->root, 90000);
+	insert(&tree->root, 409);
 	print_tree(tree->root);
+	verify_properties(&tree->root);
 
-	delete(&tree->root, 150);
+	delete(&tree->root, 247);
 	print_tree(tree->root);	
-
+	verify_properties(&tree->root);
 	return 0;
 }
 
