@@ -242,8 +242,8 @@ void right_rotate(node *n, node **root){
   1: Nó é a raiz
   2: Pai do nó é preto (Não precisa consertar árvore)
   3: Pai do Nó é vermellho e tio também (Muda cor de avô e continua verificando casos 3, 4 e 5)
-  4: Pai do Nó é vermellho e tio preto (Pai e filho tem mesmas "direções" - Rotação dupla (1 + caso 5))
-  5: Pai do Nó é vermellho e tio preto (Pai e filho diferentes "direções" - 1 rotação )
+  4: Pai do Nó é vermellho e tio preto (Pai e filho diferentes "direções" - Rotação dupla (1 + caso 5))
+  5: Pai do Nó é vermellho e tio preto (Pai e filho tem mesmas "direções" - 1 rotação )
 
 */
 void insert(rb_tree *tree, int val){
@@ -342,9 +342,10 @@ node *fix_with_rotations(node *n, node *g, node **root){
 	n_dir = get_node_direction(n);
 	p_dir = get_node_direction(n->parent);
 
+
 	/* 
-	   Caso 4: Pai é filho Esquerdo e N também é filho esquerdo
-	   Ou Pai é filho Direito e N também é filho Direito
+	   Caso 4: Pai é filho Esquerdo e N é filho Direito
+	   Ou Pai é filho Direito e N é filho Esquerdo
 	   Após sair do if cai no caso 5, realizando então rotação dupla
 	*/
 	if(p_dir != n_dir){
@@ -356,12 +357,12 @@ node *fix_with_rotations(node *n, node *g, node **root){
 			right_rotate(n, root);
 	}
 	
+	
 	/* 
-	   Caso 5: Pai é filho Esquerdo e N é filho Direito
-	   Ou Pai é filho Direito e N é filho Esquerdo
-	   Após esta rotação a árvore mantém suas propriedades devidamente
+	   Caso 5: Pai é filho Esquerdo e N também é filho esquerdo
+	   Ou Pai é filho Direito e N também é filho Direito
+	   Após esta rotação (avô) a árvore mantém suas propriedades devidamente
 	*/
-
 	n->parent->color = BLACK;
 	g->color = RED;
 
