@@ -1,13 +1,35 @@
 #include "red_black_tree.h"
 
+void menu_tree(rb_tree *tree);
+void test_tree(rb_tree *t);
+
+/*
+  Main que realizar teste aleatório ou utilizar um menu para isso  
+*/
 int main(void){
-	
-	//printf("%sTHIS IS THE BLACK NODE'S COLOR\n" ANSI_DEFAULT, shell_colors[black]);
-	//printf("%sTHIS IS THE RED NODE'S COLOR\n" ANSI_DEFAULT, shell_colors[red]);
-	//printf("THIS IS THE NILL NODE'S COLOR\n\n");
 
 	rb_tree *tree;
 	tree = create_tree();
+	
+
+	int op;
+
+	printf("RED BLACK PROGRAM\n");
+	printf("(1)-Use Red Black Menu\n(2)-Run Aleatory test\n");
+	scanf("%d", &op);
+
+	if(op == 2)
+		test_tree(tree);
+	else
+		menu_tree(tree);
+
+	return 0;
+}
+
+/*
+  Função com menu para realizar operações em árvore rubro-negra
+*/
+void menu_tree(rb_tree *tree){
 
 	int op, val;
 	char end;
@@ -23,7 +45,7 @@ int main(void){
 			case 1:
 				printf("Node Value: ");
 				scanf("%d", &val);
-				insert(&tree->root, val);
+				insert(tree, val);
 				print_tree(tree->root);
 				break;
 			case 2:
@@ -48,9 +70,32 @@ int main(void){
 
 	}while(end == 'Y' || end == 'y');
 
-	return 0;
+
 }
 
+/*
+  Função para testar valores de forma aleatória (4 inserções 2 remoções) por x vezes
+  Após cada remoção verifica propriedades da árvore 
+*/
+void test_tree(rb_tree *t){
+
+	int val[4];
+
+	int i, j;
+	for(i=0; i<100; i++){
+		for(j=0; j<4; j++){
+			val[j] = random() % 1000;
+			insert(t, val[j]);
+		}
+
+		for(j=0; j<2; j++){
+			delete(t, val[j]);
+			verify_properties(t);
+		}
+	}
+
+	print_tree(t->root);
+}
 
 
 

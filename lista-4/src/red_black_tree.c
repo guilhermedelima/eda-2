@@ -7,6 +7,51 @@ const char *shell_colors[] = { ANSI_BLACK, ANSI_RED };
 const node nill_val = {0, BLACK, NULL, NULL, NULL};
 const node *nill = &nill_val;
 
+/*
+  Assinatura de todas as funções
+*/
+rb_tree *create_tree();
+void print_tree_as_list(node *root);
+void print_node(node *n, int level);
+void print_tree(node *root);
+
+node *get_grand(node *n);
+node *get_uncle(node *n);
+direction get_node_direction(node *n);
+node *create_node(int val);
+
+void left_rotate(node *n, node **root);
+void right_rotate(node *n, node **root);
+
+void insert(rb_tree *tree, int val);
+void insert_root(node **root, int val);
+node *insert_node(node *dad, int val);
+void fix_red_dad(node *n, node **root);
+void fix_red_uncle(node *n, node *u, node *g);
+node *fix_with_rotations(node *n, node *g, node **root);
+
+void swap_key(int *a, int *b);
+node *search(node *root, int val);
+node *get_left_max(node *n);
+node *get_sibling(node *n);
+
+void delete(rb_tree *tree, int val);
+void delete_leaf(node *n, node **root);
+void delete_one_child(node *n, node **root);
+
+void delete_case1(node *n, node **root);
+void delete_case2(node *n, node **root);
+void delete_case3(node *n, node **root);
+void delete_case4(node *n, node **root);
+void delete_case5(node *n, node **root);
+void delete_case6(node *n, node **root);
+
+void verify_properties(rb_tree *tree);
+void verify_property_1(node *n);
+void verify_property_2(node *root);
+void verify_property_4(node *n);
+void _verify_property_5(node *n, int black_count, int* path_black_count);
+void verify_property_5(node *root);
 
 /*
   Função para criar uma árvore com raiz nula
@@ -201,14 +246,14 @@ void right_rotate(node *n, node **root){
   5: Pai do Nó é vermellho e tio preto (Pai e filho diferentes "direções" - 1 rotação )
 
 */
-void insert(node **root, int val){
+void insert(rb_tree *tree, int val){
 
-	if(!*root)
-		insert_root(root, val);
+	if(!tree->root)
+		insert_root(&tree->root, val);
 	else{
 
 		node *dad, *kid, *new_node;
-		kid = *root;
+		kid = tree->root;
 
 		while(kid != nill){
 			dad = kid;
@@ -219,7 +264,7 @@ void insert(node **root, int val){
 
 		/* Quando o no é vermelho tem que manter as propriedades da árvore */
 		if(dad->color == RED)
-			fix_red_dad(new_node, root);
+			fix_red_dad(new_node, &tree->root);
 			
 	}
 
@@ -409,6 +454,9 @@ void delete_leaf(node *n, node **root){
 	if(n->color == BLACK)
 		delete_case1(n, root);
 
+	if(!n->parent)
+		*root = NULL;
+
 	if(get_node_direction(n) == LEFT)
 		n->parent->left = (node *) nill;
 	else if(get_node_direction(n) == RIGHT)
@@ -435,10 +483,16 @@ void delete_one_child(node *n, node **root){
 
 	if(n->color == BLACK){
 		
-		if(child->color == RED)
-			child->color = BLACK;			
+		/* Um no preto não pode ter Um único filho preto */
+		if(child->color == RED){
+			child->color = BLACK;
+
+			if(!n->parent)
+				*root = child;
+
+		}//else
+			//delete_case1(child, root);
 		
-		delete_case1(child, root);
 	}
 
 }
@@ -447,7 +501,7 @@ void delete_one_child(node *n, node **root){
 
 void delete_case1(node *n, node **root){
 	
-	printf("caso 1\n");
+	printf("CASE 1\n");
 
 	if (!n->parent) {
 		*root = n;
@@ -460,7 +514,7 @@ void delete_case1(node *n, node **root){
 
 void delete_case2(node *n, node **root){
 
-	printf("caso 2\n");
+	printf("CASE 2\n");
 
 	node *sibling = get_sibling(n);
 
@@ -479,7 +533,7 @@ void delete_case2(node *n, node **root){
 
 void delete_case3(node *n, node **root){
 
-	printf("caso 3\n");
+	printf("CASE 3\n");
 
 	node *sibling = get_sibling(n);
 
@@ -497,7 +551,7 @@ void delete_case3(node *n, node **root){
 
 void delete_case4(node *n, node **root){
 
-	printf("caso 4\n");
+	printf("CASE 4\n");
 
 	node *sibling = get_sibling(n);
 
@@ -515,7 +569,7 @@ void delete_case4(node *n, node **root){
 
 void delete_case5(node *n, node **root){
 
-	printf("caso 5\n");
+	printf("CASE 5\n");
 
 	node *sibling = get_sibling(n);
 
@@ -541,7 +595,7 @@ void delete_case5(node *n, node **root){
 
 void delete_case6(node *n, node **root){
 
-	printf("caso 6\n");
+	printf("CASE 6\n");
 
 	node *sibling = get_sibling(n);
 
@@ -598,20 +652,20 @@ void _verify_property_5(node *n, int black_count, int* path_black_count) {
         _verify_property_5(n->right, black_count, path_black_count);
 }
 
-void verify_property_5(node *root) {
+void verify_property_5(node *root){
     int black_count_path = -1;
     _verify_property_5(root, 0, &black_count_path);
 }
 
-void verify_properties(node **root) {
+void verify_properties(rb_tree *tree){
         printf("Init of red black tree verification\n");
         printf("Property 1\n");
-        verify_property_1(*root);
+        verify_property_1(tree->root);
         printf("Property 2\n");
-        verify_property_2(*root);
+        verify_property_2(tree->root);
         printf("Property 4\n");
-        verify_property_4(*root);
+        verify_property_4(tree->root);
         printf("Property 5\n");
-        verify_property_5(*root);
+        verify_property_5(tree->root);
         printf("End of red black tree verification\n"); 
 }
