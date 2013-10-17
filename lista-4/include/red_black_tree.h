@@ -37,6 +37,7 @@ extern const node nill_val;
 extern const node *nill;
 
 extern rb_tree *create_tree();
+extern void print_tree_as_list(node *root);
 extern void print_node(node *n, int level);
 extern void print_tree(node *root);
 

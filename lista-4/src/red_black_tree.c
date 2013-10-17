@@ -18,6 +18,16 @@ rb_tree *create_tree(){
 	return tree;
 }
 
+void print_tree_as_list(node *root){
+
+	if(root && root!=nill){
+		print_tree_as_list(root->left);
+		printf("%s%d " ANSI_DEFAULT, shell_colors[root->color], root->value);
+		print_tree_as_list(root->right);
+	}
+
+}
+
 void print_tree(node *root){
 
 	print_node(root,0);

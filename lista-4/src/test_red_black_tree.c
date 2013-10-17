@@ -16,7 +16,7 @@ int main(void){
 
 		system("clear");
 		printf("RED BLACK TREE - MENU\n");
-		printf("(1)-Insert\n(2)-Delete\n(3)-Search\n(4)-Print Tree\n(5)-Print Tree as List - ");
+		printf("(1)-Insert\n(2)-Delete\n(3)-Print Tree\n(4)-Print Tree as List - ");
 		scanf("%d", &op);
 
 		switch(op){
@@ -29,18 +29,17 @@ int main(void){
 			case 2:
 				break;
 			case 3:
-				break;
-			case 4:
 				print_tree(tree->root);
 				break;
-			case 5:
+			case 4:
+				print_tree_as_list(tree->root);
 				break;
 			default:
 				printf("Invalid Option\n");
 
 		}
 
-		printf("Continue? <Y/N>: ");
+		printf("\nContinue? <Y/N>: ");
 		scanf(" %c", &end);
 
 
