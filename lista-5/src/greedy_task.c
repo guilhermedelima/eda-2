@@ -86,16 +86,16 @@ void check_best_order(task *tasks, int length){
 	int n_selected;
 
 	n_selected = check_criterion(tasks, length, START);
-	printf("SELECTED TASKS BY CRITERION START: %d\n\n", n_selected);
+	printf("SELECTED TASKS BY START: %d\n\n", n_selected);
 
 	n_selected = check_criterion(tasks, length, FINISH);
-	printf("SELECTED TASKS BY CRITERION FINISH: %d\n\n", n_selected);
+	printf("SELECTED TASKS BY FINISH: %d\n\n", n_selected);
 
 	n_selected = check_criterion(tasks, length, SIZE);
-	printf("SELECTED TASKS BY CRITERION SIZE: %d\n\n", n_selected);
+	printf("SELECTED TASKS BY SIZE: %d\n\n", n_selected);
 
 	n_selected = check_criterion(tasks, length, CRASHES);
-	printf("SELECTED TASKS BY CRITERION CRASHES: %d\n\n", n_selected);
+	printf("SELECTED TASKS BY CRASHES: %d\n\n", n_selected);
 
 }
 
@@ -107,18 +107,17 @@ int check_criterion(task *tasks, int length, task_order criterion){
 	selected_tasks = (task **) calloc(length, sizeof(task*));
 
 	sort_tasks(tasks, length, criterion);
-	print_tasks_by_criterion(tasks, length, criterion);
 
 	count=0;
 	selected_tasks[count] = &tasks[0];
-	printf("TASK SELECTED: %d - %d\n", selected_tasks[count]->init, selected_tasks[count]->end);
+	printf("SELECTED TASK: %d - %d\n", selected_tasks[count]->init, selected_tasks[count]->end);
 
 	for(i=1 ; i<length; i++){
 		
 		if( check_compatibility(&tasks[i], selected_tasks, count, criterion) == TRUE){
 			count++;
 			selected_tasks[count] = &tasks[i];
-			printf("TASK SELECTED: %d - %d\n", selected_tasks[count]->init, selected_tasks[count]->end);
+			printf("SELECTED TASK: %d - %d\n", selected_tasks[count]->init, selected_tasks[count]->end);
 		}
 	}
 
