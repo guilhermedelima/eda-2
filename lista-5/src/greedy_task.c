@@ -13,12 +13,13 @@ task *create_tasks(int length){
 	task *tasks;
 	tasks = (task *) malloc(length * sizeof(task));
 
-	int i;
+	int i, size;
 	for(i=0; i<length; i++){
 		tasks[i].id = i+1;
-
 		tasks[i].init = random() % FINISH_TIME;
-		tasks[i].size = 1 + (random() % (FINISH_TIME - tasks[i].init));
+
+		size = 1 + (random() % (FINISH_TIME - tasks[i].init));
+		tasks[i].size = (size > MAX_TASK_SIZE) ? MAX_TASK_SIZE : size;
 
 		tasks[i].end = tasks[i].init + tasks[i].size;
 		tasks[i].crashes = 0;
@@ -153,8 +154,77 @@ boolean check_compatibility(task *t, task **selected_tasks, int last_selected, t
 	return is_compatible;
 }
 
+task *create_tasks_counterexample_crashes(){
 
-task *create_tasks_PDF(){
+	task *tasks;
+	tasks = (task *) malloc(11 * sizeof(task));
+
+	tasks[0].id = 1;
+	tasks[0].init = 0;
+	tasks[0].end = 3;
+	tasks[0].crashes = 0;
+
+	tasks[1].id = 2;
+	tasks[1].init = 2;
+	tasks[1].end = 5;
+	tasks[1].crashes = 0;
+
+	tasks[2] = tasks[1];
+	tasks[2].id = 3;
+
+	tasks[3] = tasks[1];
+	tasks[3].id = 4;
+
+	tasks[4].id = 5;
+	tasks[4].init = 4;
+	tasks[4].end = 7;
+	tasks[4].crashes = 0;
+
+	tasks[5].id = 6;
+	tasks[5].init = 6;
+	tasks[5].end = 9;
+	tasks[5].crashes = 0;
+
+	tasks[6].id = 7;
+	tasks[6].init = 8;
+	tasks[6].end = 11;
+	tasks[6].crashes = 0;
+
+	tasks[7].id = 8;
+	tasks[7].init = 10;
+	tasks[7].end = 13;
+	tasks[7].crashes = 0;
+
+	tasks[8] = tasks[7];
+	tasks[8].id = 9;
+
+	tasks[9] = tasks[7];
+	tasks[9].id = 10;
+
+	tasks[10].id = 11;
+	tasks[10].init = 12;
+	tasks[10].end = 15;
+	tasks[10].crashes = 0;
+
+	tasks[0].size = tasks[0].end - tasks[0].init;
+	tasks[1].size = tasks[1].end - tasks[1].init;
+	tasks[2].size = tasks[2].end - tasks[2].init;
+	tasks[3].size = tasks[3].end - tasks[3].init;
+	tasks[4].size = tasks[4].end - tasks[4].init;
+	tasks[5].size = tasks[5].end - tasks[5].init;
+	tasks[6].size = tasks[6].end - tasks[6].init;
+	tasks[7].size = tasks[7].end - tasks[7].init;
+	tasks[8].size = tasks[8].end - tasks[8].init;
+	tasks[9].size = tasks[9].end - tasks[9].init;
+	tasks[10].size = tasks[10].end - tasks[10].init;
+
+	calculate_crashes(tasks, 11);
+	return tasks;
+}
+
+
+
+task *create_tasks_first_example(){
 
 	task *tasks;
 	tasks = (task *) malloc(8 * sizeof(task));

@@ -18,7 +18,10 @@ int main(int argc, char *argv[]){
 	tasks = create_tasks(length);
 
 	//length=8;
-	//tasks = create_tasks_PDF();
+	//tasks = create_tasks_first_example();
+
+	//length=11;
+	//tasks = create_tasks_counterexample_crashes();
 
 	print_tasks(tasks, length);
 	check_best_order(tasks, length);

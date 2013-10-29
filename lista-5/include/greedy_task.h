@@ -5,7 +5,8 @@
 #include <stdlib.h>
 
 #define START_TIME 0
-#define FINISH_TIME 11
+#define FINISH_TIME 14
+#define MAX_TASK_SIZE 5
 
 typedef enum{
 	TRUE=1, FALSE=0
@@ -29,6 +30,7 @@ extern void print_tasks_by_criterion(task *tasks, int length, task_order criteri
 extern void check_best_order(task *tasks, int length);
 extern void sort_tasks(task *tasks, int length, task_order criterion);
 
-extern task *create_tasks_PDF();
+extern task *create_tasks_counterexample_crashes();
+extern task *create_tasks_first_example();
 
 #endif
