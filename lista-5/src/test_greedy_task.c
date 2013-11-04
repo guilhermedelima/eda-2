@@ -12,19 +12,17 @@ int main(int argc, char *argv[]){
 	}
 
 	int length;
-	task *tasks;
+	task_order criterion;
 
 	length = atoi(argv[1]);
-	tasks = create_tasks(length);
+	
+	if(length < 1){
+		fprintf(stderr, "Number of tasks must be bigger than 0\n");
+		exit(-1);
+	}
 
-	//length=8;
-	//tasks = create_tasks_first_example();
-
-	//length=11;
-	//tasks = create_tasks_counterexample_crashes();
-
-	print_tasks(tasks, length);
-	check_best_order(tasks, length);
+	criterion = choose_criterion(length);
+	printf("\n\nSELECTED CRITERION: %s\n", TASK_ORDER[criterion]);
 
 	return 0;
 }

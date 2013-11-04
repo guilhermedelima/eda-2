@@ -1,11 +1,14 @@
 #include "greedy_task.h"
 
+const char *TASK_ORDER[] = {"Earliest start time", "Earliest finish time", "Shortest size", "Fewest crashes", "NONE" };
+
+
 task *create_tasks(int length);
 void calculate_crashes(task *tasks, int length);
 void print_tasks(task *tasks, int length);
 void print_tasks_by_criterion(task *tasks, int length, task_order criterion);
-void check_best_order(task *tasks, int length);
-int check_criterion(task *tasks, int length, task_order criterion);
+task_order choose_criterion(int length);
+int get_selected_tasks(task *tasks, int length, task_order criterion);
 boolean check_compatibility(task *t, task **selected_tasks, int last_selected, task_order criterion);
 
 task *create_tasks(int length){
@@ -82,25 +85,47 @@ void print_tasks_by_criterion(task *tasks, int length, task_order criterion){
 }
 
 
-void check_best_order(task *tasks, int length){
+task_order choose_criterion(int length){
 
-	int n_selected;
+	int n_selected[N_TASK_ORDER] = {0};
+	int count, i, max_selected;
+	task *tasks;
+	task_order criterion;
 
-	n_selected = check_criterion(tasks, length, START);
-	printf("SELECTED TASKS BY START: %d\n\n", n_selected);
+	for(count=0, criterion=NONE; count <= MAX_LOOP && criterion == NONE; count++){
+	
+		if(count < MAX_LOOP)
+			tasks = create_tasks(length);
+		else{
+			printf("\nCounter example");
+			tasks = create_tasks_counterexample_crashes();
+			length = TASK_CE_SIZE;
 
-	n_selected = check_criterion(tasks, length, FINISH);
-	printf("SELECTED TASKS BY FINISH: %d\n\n", n_selected);
+		}
 
-	n_selected = check_criterion(tasks, length, SIZE);
-	printf("SELECTED TASKS BY SIZE: %d\n\n", n_selected);
+		printf("\n\nIteration %d\n", count+1);
 
-	n_selected = check_criterion(tasks, length, CRASHES);
-	printf("SELECTED TASKS BY CRASHES: %d\n\n", n_selected);
+		max_selected=0;
+		for(i=0; i<N_TASK_ORDER; i++){
+			n_selected[i] += get_selected_tasks(tasks, length, i);
+			printf("SELECTED TASKS BY %s :%d\n", TASK_ORDER[i], n_selected[i]);
 
+			if( n_selected[i] > max_selected ){
+				max_selected = n_selected[i];
+				criterion = i;
+			}else if(n_selected[i] == max_selected){
+				criterion = NONE;
+			}
+		}
+
+		free(tasks);
+	}		
+	
+	return criterion;
 }
 
-int check_criterion(task *tasks, int length, task_order criterion){
+
+int get_selected_tasks(task *tasks, int length, task_order criterion){
 
 	int i, count;
 	task **selected_tasks;
@@ -111,14 +136,14 @@ int check_criterion(task *tasks, int length, task_order criterion){
 
 	count=0;
 	selected_tasks[count] = &tasks[0];
-	printf("SELECTED TASK: %d - %d\n", selected_tasks[count]->init, selected_tasks[count]->end);
+	//printf("SELECTED TASK: %d - %d\n", selected_tasks[count]->init, selected_tasks[count]->end);
 
 	for(i=1 ; i<length; i++){
 		
 		if( check_compatibility(&tasks[i], selected_tasks, count, criterion) == TRUE){
 			count++;
 			selected_tasks[count] = &tasks[i];
-			printf("SELECTED TASK: %d - %d\n", selected_tasks[count]->init, selected_tasks[count]->end);
+			//printf("SELECTED TASK: %d - %d\n", selected_tasks[count]->init, selected_tasks[count]->end);
 		}
 	}
 
@@ -157,16 +182,16 @@ boolean check_compatibility(task *t, task **selected_tasks, int last_selected, t
 task *create_tasks_counterexample_crashes(){
 
 	task *tasks;
-	tasks = (task *) malloc(11 * sizeof(task));
+	tasks = (task *) malloc(TASK_CE_SIZE * sizeof(task));
 
 	tasks[0].id = 1;
 	tasks[0].init = 0;
-	tasks[0].end = 3;
+	tasks[0].end = 4;
 	tasks[0].crashes = 0;
 
 	tasks[1].id = 2;
-	tasks[1].init = 2;
-	tasks[1].end = 5;
+	tasks[1].init = 3;
+	tasks[1].end = 6;
 	tasks[1].crashes = 0;
 
 	tasks[2] = tasks[1];
@@ -176,23 +201,23 @@ task *create_tasks_counterexample_crashes(){
 	tasks[3].id = 4;
 
 	tasks[4].id = 5;
-	tasks[4].init = 4;
-	tasks[4].end = 7;
+	tasks[4].init = 5;
+	tasks[4].end = 8;
 	tasks[4].crashes = 0;
 
 	tasks[5].id = 6;
-	tasks[5].init = 6;
-	tasks[5].end = 9;
+	tasks[5].init = 7;
+	tasks[5].end = 10;
 	tasks[5].crashes = 0;
 
 	tasks[6].id = 7;
-	tasks[6].init = 8;
-	tasks[6].end = 11;
+	tasks[6].init = 9;
+	tasks[6].end = 12;
 	tasks[6].crashes = 0;
 
 	tasks[7].id = 8;
-	tasks[7].init = 10;
-	tasks[7].end = 13;
+	tasks[7].init = 11;
+	tasks[7].end = 14;
 	tasks[7].crashes = 0;
 
 	tasks[8] = tasks[7];
@@ -202,8 +227,8 @@ task *create_tasks_counterexample_crashes(){
 	tasks[9].id = 10;
 
 	tasks[10].id = 11;
-	tasks[10].init = 12;
-	tasks[10].end = 15;
+	tasks[10].init = 13;
+	tasks[10].end = 16;
 	tasks[10].crashes = 0;
 
 	tasks[0].size = tasks[0].end - tasks[0].init;
@@ -218,7 +243,7 @@ task *create_tasks_counterexample_crashes(){
 	tasks[9].size = tasks[9].end - tasks[9].init;
 	tasks[10].size = tasks[10].end - tasks[10].init;
 
-	calculate_crashes(tasks, 11);
+	calculate_crashes(tasks, TASK_CE_SIZE);
 	return tasks;
 }
 
