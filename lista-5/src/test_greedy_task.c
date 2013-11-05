@@ -1,7 +1,9 @@
 #include "greedy_task.h"
 #include <time.h>
 
-
+/* Main que verifica o melhor critério para o interval scheduling. 
+   O número de tarefas criadas para um exemplo é passado como parâmetro. 
+*/
 int main(int argc, char *argv[]){
 
 	srandom(time(NULL));
@@ -16,8 +18,8 @@ int main(int argc, char *argv[]){
 
 	length = atoi(argv[1]);
 	
-	if(length < 1){
-		fprintf(stderr, "Number of tasks must be bigger than 0\n");
+	if(length < 3){
+		fprintf(stderr, "Number of tasks must be bigger than 2\n");
 		exit(-1);
 	}
 
