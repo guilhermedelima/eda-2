@@ -43,23 +43,26 @@ public class Graph {
 	}
 	
 	public void breadthFirstSearch(){
-		Queue<Node> bfsQueue = new LinkedList<Node>();;
+		
+		Queue<Node> bfsQueue;
 		Node first, n, adj;
 		int i;
-
+		
+		bfsQueue = new LinkedList<Node>();
+		
 		while( (first = getFirstUnvisited()) != null){
 			bfsQueue.add(first);
 			first.setVisited(true);
-
-			while(!bfsQueue.isEmpty()) {        
+			
+			while(!bfsQueue.isEmpty()){	
 				n = bfsQueue.remove();
-
+				
 				for(i=0; i<MAX_NODES; i++){
 					if(adjacencyMatrix[n.getIndex()][i] == 1){
 						adj = nodeList.get(i);
-
+						
 						if(!adj.isVisited()){
-							printNode(nodeList.indexOf(n));
+							printNode(adj.getIndex());
 							adj.setVisited(true);
 							bfsQueue.add(adj);
 						}
