@@ -107,7 +107,7 @@ public class Graph {
 	public List<Node> topologicalSort() {
 		List<Node> topologicalList = new ArrayList<Node>();
 		Graph clone = this.clone();
-		List<Integer> nodeDegreeList = depthFirstSearchNoEntryEdge(clone);
+		List<Integer> nodeDegreeList = dfsNodesDegree(clone);
 		
 		for(int i = 0; i < getNumberOfNodes(); i++) {
 			int minimumDegree = Integer.MAX_VALUE;
@@ -153,7 +153,7 @@ public class Graph {
 		return clone;
 	}
 	
-	private List<Integer> depthFirstSearchNoEntryEdge(Graph clone) {
+	private List<Integer> dfsNodesDegree(Graph clone) {
 		Stack<Node> stack = new Stack<Node>();
 		Node first, top, adj;
 		List<Integer> nodeDegreeList = new ArrayList<Integer>();
