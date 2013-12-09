@@ -1,6 +1,8 @@
 package br.unb.graph;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
 
@@ -39,7 +41,33 @@ public class Graph {
 	/* */
 	
 	public void breadthFirstSearch(){
+		
 		Queue<Node> bfsQueue;
+		Node first, n, adj;
+		int i;
+		
+		bfsQueue = new LinkedList<Node>();
+		
+		while( (first = getFirstUnvisited()) != null){
+			bfsQueue.add(first);
+			first.setVisited(true);
+			
+			while(!bfsQueue.isEmpty()){	
+				n = bfsQueue.remove();
+				
+				for(i=0; i<MAX_NODES; i++){
+					if(adjacencyMatrix[n.getIndex()][i] == 1){
+						adj = nodeList.get(i);
+						
+						if(!adj.isVisited()){
+							System.out.println("Node "+i);
+							adj.setVisited(true);
+							bfsQueue.add(adj);
+						}
+					}
+				}
+			}
+		}
 		
 	}
 	
@@ -63,5 +91,34 @@ public class Graph {
 				}
 			}
 		}
+	}
+	
+	public void clearVisitedNodes(){
+		
+		Iterator<Node> i;
+		
+		i = nodeList.iterator();
+		while(i.hasNext()){
+			Node temp = i.next();
+			temp.setVisited(false);
+		}
+	}
+	
+	public Node getFirstUnvisited(){
+		
+		Iterator<Node> i;
+		Node firstUnvisited;
+		
+		i = nodeList.iterator();
+		firstUnvisited = null;
+		
+		while(i.hasNext() && firstUnvisited==null){
+			Node temp = i.next();
+			
+			if(!temp.isVisited())
+				firstUnvisited = temp;
+		}
+		
+		return firstUnvisited;
 	}
 }
