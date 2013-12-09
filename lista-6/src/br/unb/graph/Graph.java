@@ -108,7 +108,8 @@ public class Graph {
 		List<Node> topologicalList = new ArrayList<Node>();
 		Graph clone = this.clone();
 		List<Integer> nodeDegreeList = dfsNodesDegree(clone);
-		
+		for(int i : nodeDegreeList)
+			System.out.println(i);
 		for(int i = 0; i < getNumberOfNodes(); i++) {
 			int minimumDegree = Integer.MAX_VALUE;
 			int nodeDegree;
@@ -119,7 +120,7 @@ public class Graph {
 				
 				if(nodeDegree < minimumDegree) {
 					minimumDegree = nodeDegree;
-					minimumDegreeNode = nodeList.get(j);
+					minimumDegreeNode = clone.nodeList.get(j);
 				}
 			}
 			
@@ -130,14 +131,14 @@ public class Graph {
 			
 			topologicalList.add(minimumDegreeNode);
 			clone.removeNode(minimumDegreeNode);
-			nodeDegreeList.get(minimumDegreeNode.getIndex());
+			nodeDegreeList.remove(minimumDegreeNode);
 		}
 		
 		return topologicalList;
 	}
 	
 	private void removeNode(Node node) {
-		nodeList.remove(node.getIndex());
+		nodeList.remove(node);
 		for(int i = 0; i < getNumberOfNodes(); i++) {
 			adjacencyMatrix[node.getIndex()][i] = 0;
 			adjacencyMatrix[i][node.getIndex()] = 0;
@@ -171,12 +172,13 @@ public class Graph {
 				boolean foundNode = false;
 				
 				for(int i = 0; i < clone.getNumberOfNodes(); i++) {
-					if(clone.adjacencyMatrix[top.getIndex()][i] == 1) {						
+					if(clone.adjacencyMatrix[top.getIndex()][i] == 1) {
 						adj = clone.nodeList.get(i);
+						Integer nodeDegree = nodeDegreeList.get(adj.getIndex());
+						nodeDegreeList.set(adj.getIndex(), nodeDegree + 1);
+						
 						if (!adj.isVisited()) {
-							Integer nodeDegree = nodeDegreeList.get(top.getIndex());
-							nodeDegree++;
-							
+							printEdge(top, adj);
 							stack.push(adj);
 							foundNode = true;
 							break;
