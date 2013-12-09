@@ -7,18 +7,22 @@ public class TestGraph {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-
+		System.out.println("**Depth First Search**");
+		dfsTest();
+		
+		System.out.println("\n**Breadth First Search**");
 		bfsTest();
 	}
 	
 	public static void dfsTest(){
-		
 		Graph graph = new Graph();
+		
 		Node nodeA = new Node("A");
 		Node nodeB = new Node("B");
 		Node nodeC = new Node("C");
 		Node nodeD = new Node("D");
 		Node nodeE = new Node("E");
+		
 		graph.addNode(nodeA);
 		graph.addNode(nodeB);
 		graph.addNode(nodeC);
@@ -36,7 +40,6 @@ public class TestGraph {
 	}
 	
 	public static void bfsTest(){
-		
 		Graph graph = new Graph();
 		
 		Node n1 = new Node("Nó 1");
@@ -62,7 +65,6 @@ public class TestGraph {
 		graph.addEdge(n1.getIndex(), n2.getIndex());
 		graph.addEdge(n2.getIndex(), n6.getIndex());
 		graph.addEdge(n3.getIndex(), n7.getIndex());
-		
 		
 		graph.breadthFirstSearch();
 	}

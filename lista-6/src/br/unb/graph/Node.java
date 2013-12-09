@@ -34,5 +34,12 @@ public class Node {
 	protected void setIndex(int index) {
 		this.index =  index;
 	}
+
+	@Override
+	public String toString() {
+		return "\"" + label + "["+ index + "]\"";
+	}
+	
+	
 }
 

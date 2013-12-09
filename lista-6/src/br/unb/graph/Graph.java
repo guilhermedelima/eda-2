@@ -17,7 +17,7 @@ public class Graph {
 		nodeList = new ArrayList<Node>();
 	}
 	
-	public int getListSize(){
+	public int getNumberOfNodes(){
 		return nodeList.size();
 	}
 	
@@ -34,12 +34,8 @@ public class Graph {
 		if (aIndex != bIndex) {
 			adjacencyMatrix[aIndex][bIndex] = 1;
 		} else {
-			System.out.println("A node cant have an edge to itsfel (same indexes '"+ aIndex +"' were passed)");
+			System.out.println("A node cant have an edge to itself (same indexes '"+ aIndex +"' were passed)");
 		}
-	}
-	
-	void printNode(int index){
-		System.out.println("Node "+ nodeList.get(index).getLabel() +"["+ index +"]");
 	}
 	
 	public void breadthFirstSearch(){
@@ -57,12 +53,12 @@ public class Graph {
 			while(!bfsQueue.isEmpty()){	
 				n = bfsQueue.remove();
 				
-				for(i=0; i<getListSize(); i++){
+				for(i=0; i < getNumberOfNodes(); i++){
 					if(adjacencyMatrix[n.getIndex()][i] == 1){
 						adj = nodeList.get(i);
 						
 						if(!adj.isVisited()){
-							System.out.println("Edge between "+n.getLabel()+ " And "+adj.getLabel());
+							printEdge(n, adj);
 							adj.setVisited(true);
 							bfsQueue.add(adj);
 						}
@@ -71,7 +67,7 @@ public class Graph {
 			}
 		}
 
-		unvistAllNodes();
+		clearAllNodeVisits();
 	}
 	
 	public void depthFirstSearch() {
@@ -84,16 +80,18 @@ public class Graph {
 			while(!stack.isEmpty()) {
 				top = stack.peek();
 				top.setVisited(true);
-				boolean foundNode = false;
-				printNode(nodeList.indexOf(top));
 				
-				for(int i = 0; i < MAX_NODES; i++) {
-					if(adjacencyMatrix[top.getIndex()][i] == 1 && !nodeList.get(i).isVisited()) {
+				boolean foundNode = false;
+				
+				for(int i = 0; i < getNumberOfNodes(); i++) {
+					if(adjacencyMatrix[top.getIndex()][i] == 1) {						
 						adj = nodeList.get(i);
-						stack.push(adj);
-						
-						foundNode = true;
-						break;
+						if (!adj.isVisited()) {
+							printEdge(top, adj);
+							stack.push(adj);
+							foundNode = true;
+							break;
+						}
 					}
 				}
 				if(!foundNode)
@@ -101,10 +99,14 @@ public class Graph {
 			}
 		}
 		
-		unvistAllNodes();
+		clearAllNodeVisits();
 	}
 	
-	public Node getFirstUnvisited(){    
+	private void printEdge(Node a, Node b) {
+		System.out.println("Edge between "+ a +" and "+ b);
+	}
+	
+	private Node getFirstUnvisited(){    
         Node firstUnvisited = null;
         
         for (Node node : nodeList) {
@@ -117,7 +119,7 @@ public class Graph {
         return firstUnvisited;
 	}
 	
-	private void unvistAllNodes() {
+	private void clearAllNodeVisits() {
 		for (Node node : nodeList) 
 			node.setVisited(false);
 	}
