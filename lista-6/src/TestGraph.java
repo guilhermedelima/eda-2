@@ -1,3 +1,5 @@
+import java.util.List;
+
 import br.unb.graph.Graph;
 import br.unb.graph.Node;
 
@@ -12,6 +14,49 @@ public class TestGraph {
 		
 		System.out.println("\n**Breadth First Search**");
 		bfsTest();
+		
+		System.out.println("\n**Topological Sort**");
+		topologicalSortTest();
+	}
+	
+	public static void topologicalSortTest(){
+		Graph graph = new Graph();
+		
+		Node v1 = new Node("v1");
+		Node v2 = new Node("v2");
+		Node v3 = new Node("v3");
+		Node v4 = new Node("v4");
+		Node v5 = new Node("v5");
+		Node v6 = new Node("v6");
+		Node v7 = new Node("v7");
+		
+		graph.addNode(v1);
+		graph.addNode(v2);
+		graph.addNode(v3);
+		graph.addNode(v4);
+		graph.addNode(v5);
+		graph.addNode(v6);
+		graph.addNode(v7);
+		
+		
+		graph.addEdge(v1.getIndex(), v4.getIndex());
+		graph.addEdge(v1.getIndex(), v5.getIndex());
+		graph.addEdge(v1.getIndex(), v7.getIndex());
+		graph.addEdge(v2.getIndex(), v3.getIndex());
+		graph.addEdge(v2.getIndex(), v5.getIndex());
+		graph.addEdge(v2.getIndex(), v6.getIndex());
+		graph.addEdge(v3.getIndex(), v5.getIndex());
+		graph.addEdge(v3.getIndex(), v4.getIndex());
+		graph.addEdge(v4.getIndex(), v5.getIndex());
+		graph.addEdge(v5.getIndex(), v6.getIndex());
+		graph.addEdge(v5.getIndex(), v7.getIndex());
+		graph.addEdge(v6.getIndex(), v7.getIndex());
+		
+		List<Node> topologicalList =  graph.topologicalSort();
+		
+		for(Node n : topologicalList) {
+			System.out.print(n.getLabel() +", ");
+		}
 	}
 	
 	public static void dfsTest(){
