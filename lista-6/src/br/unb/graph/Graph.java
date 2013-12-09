@@ -57,12 +57,12 @@ public class Graph {
 			while(!bfsQueue.isEmpty()){	
 				n = bfsQueue.remove();
 				
-				for(i=0; i<MAX_NODES; i++){
+				for(i=0; i<getListSize(); i++){
 					if(adjacencyMatrix[n.getIndex()][i] == 1){
 						adj = nodeList.get(i);
 						
 						if(!adj.isVisited()){
-							printNode(adj.getIndex());
+							System.out.println("Edge between "+n.getLabel()+ " And "+adj.getLabel());
 							adj.setVisited(true);
 							bfsQueue.add(adj);
 						}
