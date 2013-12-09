@@ -6,10 +6,9 @@ public class Node {
 	private boolean visited;
 	private int index;
 	
-	public Node(String label, int index) {
+	public Node(String label) {
 		this.label = label;
 		this.visited = false;
-		this.index = index;
 	}
 
 	public String getLabel() {
@@ -30,6 +29,10 @@ public class Node {
 	
 	public int getIndex() {
 		return index;
+	}
+	
+	protected void setIndex(int index) {
+		this.index =  index;
 	}
 }
 
