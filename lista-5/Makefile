@@ -6,11 +6,10 @@ SRCDIR=src
 CC=gcc
 CFLAGS=-W -Wall -I $(INCDIR)
 
-TARGET=red_black_tree
+TARGET=greedy_task
 
-
-_HEADER=red_black_tree.h
-_OBJ=red_black_tree.o test_red_black_tree.o
+_HEADER=greedy_task.h
+_OBJ=greedy_task.o merge_sort.o test_greedy_task.o
 
 HEADER=$(patsubst %,$(INCDIR)/%,$(_HEADER))
 OBJ=$(patsubst %,$(OBJDIR)/%,$(_OBJ))

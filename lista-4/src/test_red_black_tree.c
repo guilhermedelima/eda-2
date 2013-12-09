@@ -14,7 +14,7 @@ int main(void){
 
 	int op;
 
-	printf("RED BLACK PROGRAM\n");
+	printf("RED BLACK TREE PROGRAM\n");
 	printf("(1)-Use Red Black Menu\n(2)-Run Aleatory test\n");
 	scanf("%d", &op);
 

@@ -242,8 +242,8 @@ void right_rotate(node *n, node **root){
   1: Nó é a raiz
   2: Pai do nó é preto (Não precisa consertar árvore)
   3: Pai do Nó é vermellho e tio também (Muda cor de avô e continua verificando casos 3, 4 e 5)
-  4: Pai do Nó é vermellho e tio preto (Pai e filho tem mesmas "direções" - Rotação dupla (1 + caso 5))
-  5: Pai do Nó é vermellho e tio preto (Pai e filho diferentes "direções" - 1 rotação )
+  4: Pai do Nó é vermellho e tio preto (Pai e filho diferentes "direções" - Rotação dupla (1 + caso 5))
+  5: Pai do Nó é vermellho e tio preto (Pai e filho tem mesmas "direções" - 1 rotação )
 
 */
 void insert(rb_tree *tree, int val){
@@ -342,9 +342,10 @@ node *fix_with_rotations(node *n, node *g, node **root){
 	n_dir = get_node_direction(n);
 	p_dir = get_node_direction(n->parent);
 
+
 	/* 
-	   Caso 4: Pai é filho Esquerdo e N também é filho esquerdo
-	   Ou Pai é filho Direito e N também é filho Direito
+	   Caso 4: Pai é filho Esquerdo e N é filho Direito
+	   Ou Pai é filho Direito e N é filho Esquerdo
 	   Após sair do if cai no caso 5, realizando então rotação dupla
 	*/
 	if(p_dir != n_dir){
@@ -356,12 +357,12 @@ node *fix_with_rotations(node *n, node *g, node **root){
 			right_rotate(n, root);
 	}
 	
+	
 	/* 
-	   Caso 5: Pai é filho Esquerdo e N é filho Direito
-	   Ou Pai é filho Direito e N é filho Esquerdo
-	   Após esta rotação a árvore mantém suas propriedades devidamente
+	   Caso 5: Pai é filho Esquerdo e N também é filho esquerdo
+	   Ou Pai é filho Direito e N também é filho Direito
+	   Após esta rotação (avô) a árvore mantém suas propriedades devidamente
 	*/
-
 	n->parent->color = BLACK;
 	g->color = RED;
 
@@ -376,7 +377,9 @@ node *fix_with_rotations(node *n, node *g, node **root){
 	return n;
 }
 
-
+/*
+  Função para trocar o valor de dois inteiros
+*/
 void swap_key(int *a, int *b){
 
 	int tmp;
@@ -386,6 +389,10 @@ void swap_key(int *a, int *b){
 
 }
 
+
+/*
+  Função para achar o nó a ser deletado
+*/
 node *search(node *root, int val){
 	
 	node *n;
@@ -398,6 +405,9 @@ node *search(node *root, int val){
 	return (n == nill) ? NULL : n;
 }
 
+/*
+  Função que retorna o elemento mais a esquerda da subárvore a direita  
+*/
 node *get_left_max(node *n){
 
 	while(n && n->left != nill){
@@ -407,6 +417,9 @@ node *get_left_max(node *n){
 	return (n == nill) ? NULL : n;
 }
 
+/*
+  Função que retorna irmão de um nó
+*/
 node *get_sibling(node *n){
 
 	node *sib;
@@ -419,7 +432,13 @@ node *get_sibling(node *n){
 	return sib;  
 }
 
-
+/*
+  Função para remover um nó da árvore.
+  Chama funções para tratar três casos diferentes:
+  1: Nó tem dois filhos (troca com sucessor)
+  2: Nó tem um filho
+  3: Nó é folha
+*/
 void delete(rb_tree *tree, int val){
 	
 	node *n;
@@ -428,6 +447,7 @@ void delete(rb_tree *tree, int val){
 	if(!n)
 		return;
 
+	/* Se o nó tiver dois filhos ele troca com o sucessor e continua */
 	if(n->left != nill && n->right != nill){
 		printf("DELETE INTER NODE %d\n", n->value);
 
@@ -438,15 +458,22 @@ void delete(rb_tree *tree, int val){
 		n = new_node;		
 	}
 
+	/* Verifica se o no é folha ou tem um filho */
 	if(n->left != nill || n->right != nill)
 		delete_one_child(n, &tree->root);
 	else if(n->left == nill || n->right == nill)
 		delete_leaf(n, &tree->root);
 
+	/* Após validar a árvore o nó é removido */
 	free(n);
 
 }
 
+/*
+  Função para remover um nó sem filhos
+  Se o nó for preto ele passa pelos 6 casos que tratam o problema "duplo preto"
+  Após o tratamento do nó preto ou se ele for vermelho, o nó é apenas substituído na árvore por nill
+*/
 void delete_leaf(node *n, node **root){
 
 	printf("DELETE LEAF %d\n", n->value);
@@ -464,7 +491,11 @@ void delete_leaf(node *n, node **root){
 
 }
 
-
+/*
+  Função para deletar nó quando este possui apenas um filhos
+  Se o nó for vermelho ele é apenas substituído na árvore pelo filho
+  Se o nó for preto e o filho vermelho (sempre será), além de substituir o filho se torna preto
+*/
 void delete_one_child(node *n, node **root){
 
 	printf("DELETE NODE WITH ONE KID %d\n", n->value);
@@ -482,26 +513,21 @@ void delete_one_child(node *n, node **root){
 	}
 
 	if(n->color == BLACK){
-		
-		/* Um no preto não pode ter Um único filho preto */
+		/* Um no preto com filho único pode apenas ter filho vermelho */
 		if(child->color == RED){
 			child->color = BLACK;
 
 			if(!n->parent)
 				*root = child;
-
-		}//else
-			//delete_case1(child, root);
-		
+		}
 	}
-
 }
 
 
-
+/*
+  Função para tratar caso 1, quando o nó a ser removido for folha preta
+*/
 void delete_case1(node *n, node **root){
-	
-	printf("CASE 1\n");
 
 	if (!n->parent) {
 		*root = n;
@@ -512,9 +538,10 @@ void delete_case1(node *n, node **root){
 }
 
 
+/*
+  Função para tratar caso 2, quando o nó a ser removido for folha preta
+*/
 void delete_case2(node *n, node **root){
-
-	printf("CASE 2\n");
 
 	node *sibling = get_sibling(n);
 
@@ -531,9 +558,10 @@ void delete_case2(node *n, node **root){
 	delete_case3(n, root);
 }
 
+/*
+  Função para tratar caso 3, quando o nó a ser removido for folha preta
+*/
 void delete_case3(node *n, node **root){
-
-	printf("CASE 3\n");
 
 	node *sibling = get_sibling(n);
 
@@ -549,9 +577,10 @@ void delete_case3(node *n, node **root){
 	}
 }
 
+/*
+  Função para tratar caso 4, quando o nó a ser removido for folha preta
+*/
 void delete_case4(node *n, node **root){
-
-	printf("CASE 4\n");
 
 	node *sibling = get_sibling(n);
 
@@ -567,9 +596,10 @@ void delete_case4(node *n, node **root){
 	
 }
 
+/*
+  Função para tratar caso 5, quando o nó a ser removido for folha preta
+*/
 void delete_case5(node *n, node **root){
-
-	printf("CASE 5\n");
 
 	node *sibling = get_sibling(n);
 
@@ -593,9 +623,10 @@ void delete_case5(node *n, node **root){
 	delete_case6(n, root);
 }
 
+/*
+  Função para tratar caso 6, quando o nó a ser removido for folha preta
+*/
 void delete_case6(node *n, node **root){
-
-	printf("CASE 6\n");
 
 	node *sibling = get_sibling(n);
 
@@ -612,7 +643,9 @@ void delete_case6(node *n, node **root){
 
 }
 
-
+/*
+  Função para verificar se todos os nós são, ou pretos, ou vermelhos
+*/
 void verify_property_1(node *n) {
         assert(n->color == RED || n->color == BLACK);
         if(n == nill) return;
@@ -620,10 +653,17 @@ void verify_property_1(node *n) {
         verify_property_1(n->right);
 }
 
+/*
+  Função para verificar se a raiz é preta
+*/
 void verify_property_2(node *root) {
         assert(root->color == BLACK);
 }
 
+/*
+  Função para verificar se nó vermelho tem pais e filhos pretos
+  Obs: Propriedade 3 está implícita
+*/
 void verify_property_4(node *n) {
         if (n->color == RED) {
                 assert (n->left->color   == BLACK);
@@ -635,7 +675,9 @@ void verify_property_4(node *n) {
         verify_property_4(n->right);
 }
 
-
+/*
+  Função para verificar se todos os caminhos a partir da raiz possuem a mesma quanidade de nós pretos
+*/
 void _verify_property_5(node *n, int black_count, int* path_black_count) {
         if (n->color == BLACK) {
         black_count++;
@@ -652,12 +694,24 @@ void _verify_property_5(node *n, int black_count, int* path_black_count) {
         _verify_property_5(n->right, black_count, path_black_count);
 }
 
+/*
+  Finção que inicia a recursividade da função anterior
+*/
 void verify_property_5(node *root){
     int black_count_path = -1;
     _verify_property_5(root, 0, &black_count_path);
 }
 
+/*
+  Função que verifica se uma árvore rubro-negra possui todas as propriedades 
+*/
 void verify_properties(rb_tree *tree){
+
+	if(!tree->root){
+		printf("Empty tree\n");
+		return;
+	}
+
         printf("Init of red black tree verification\n");
         printf("Property 1\n");
         verify_property_1(tree->root);
