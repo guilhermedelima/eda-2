@@ -15,11 +15,17 @@ public class TestGraph {
 		System.out.println("\n**Breadth First Search**");
 		bfsTest();
 		
-		System.out.println("\n**Topological Sort**");
-		topologicalSortTest();
+		System.out.println("\n**Topological Sort 1**");
+		topologicalSortTest1();
+		
+		System.out.println("\n**Topological Sort 2**");
+		topologicalSortTest2();
+		
+		System.out.println("\n**Topological Sort 3**");
+		topologicalSortTest3();
 	}
 	
-	public static void topologicalSortTest(){
+	public static void topologicalSortTest1(){
 		Graph graph = new Graph();
 		
 		Node v1 = new Node("v1");
@@ -51,6 +57,63 @@ public class TestGraph {
 		graph.addEdge(v5.getIndex(), v6.getIndex());
 		graph.addEdge(v5.getIndex(), v7.getIndex());
 		graph.addEdge(v6.getIndex(), v7.getIndex());
+		
+		List<Node> topologicalList =  graph.topologicalSort();
+		
+		for(Node n : topologicalList) {
+			System.out.print(n.getLabel() +", ");
+		}
+	}
+	
+	public static void topologicalSortTest2(){
+		Graph graph = new Graph();
+		
+		Node v2 = new Node("v2");
+		Node v3 = new Node("v3");
+		Node v4 = new Node("v4");
+		Node v5 = new Node("v5");
+		Node v6 = new Node("v6");
+		
+		graph.addNode(v2);
+		graph.addNode(v3);
+		graph.addNode(v4);
+		graph.addNode(v5);
+		graph.addNode(v6);
+		
+		graph.addEdge(v6.getIndex(), v2.getIndex());
+		graph.addEdge(v2.getIndex(), v5.getIndex());
+		graph.addEdge(v2.getIndex(), v3.getIndex());
+		graph.addEdge(v5.getIndex(), v4.getIndex());
+		graph.addEdge(v3.getIndex(), v4.getIndex());
+		
+		List<Node> topologicalList =  graph.topologicalSort();
+		
+		for(Node n : topologicalList) {
+			System.out.print(n.getLabel() +", ");
+		}
+	}
+	
+	public static void topologicalSortTest3(){
+		Graph graph = new Graph();
+		
+		Node v2 = new Node("v2");
+		Node v3 = new Node("v3");
+		Node v4 = new Node("v4");
+		Node v5 = new Node("v5");
+		Node v6 = new Node("v6");
+		
+		graph.addNode(v2);
+		graph.addNode(v3);
+		graph.addNode(v4);
+		graph.addNode(v5);
+		graph.addNode(v6);
+		
+		graph.addEdge(v6.getIndex(), v2.getIndex());
+		graph.addEdge(v2.getIndex(), v5.getIndex());
+		graph.addEdge(v2.getIndex(), v3.getIndex());
+		graph.addEdge(v5.getIndex(), v4.getIndex());
+		graph.addEdge(v3.getIndex(), v4.getIndex());
+		graph.addEdge(v4.getIndex(), v6.getIndex());
 		
 		List<Node> topologicalList =  graph.topologicalSort();
 		

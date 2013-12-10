@@ -1,7 +1,6 @@
 package br.unb.graph;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -107,86 +106,116 @@ public class Graph {
 	public List<Node> topologicalSort() {
 		List<Node> topologicalList = new ArrayList<Node>();
 		Graph clone = this.clone();
-		List<Integer> nodeDegreeList = dfsNodesDegree(clone);
-		for(int i : nodeDegreeList)
-			System.out.println(i);
+
+		// Modify the DFS (BFS) to fill a vector count that stores, for each node v, the number of remaining edges that are incident in v
+		List<Integer> nodeDegreeList = bfsNodesDegree(clone);
+		
 		for(int i = 0; i < getNumberOfNodes(); i++) {
 			int minimumDegree = Integer.MAX_VALUE;
 			int nodeDegree;
 			Node minimumDegreeNode = null;
 			
-			for(int j = 0; j < getNumberOfNodes(); j++) {
+			for(int j = 0; j < clone.getNumberOfNodes(); j++) {
 				nodeDegree = nodeDegreeList.get(j);
 				
 				if(nodeDegree < minimumDegree) {
 					minimumDegree = nodeDegree;
+					// node with minimum degree in G
 					minimumDegreeNode = clone.nodeList.get(j);
 				}
 			}
 			
+
+			// If v has degree larger than 0 Return G is not a DAG
 			if(minimumDegree > 0) {
 				System.out.println("Graph is not a DAG");
-				return null;
+				return new ArrayList<Node>();
 			}
 			
+			List<Node> nodesTobeUpdatedList = new ArrayList<Node>();
+			for(int j = 0; j < clone.getNumberOfNodes(); j++) {
+				if(clone.adjacencyMatrix[minimumDegreeNode.getIndex()][j] == 1) {
+					nodesTobeUpdatedList.add(clone.nodeList.get(j));
+				}
+			}
+			// Add v to the topological order
 			topologicalList.add(minimumDegreeNode);
+
+			//Remove v from G
 			clone.removeNode(minimumDegreeNode);
-			nodeDegreeList.remove(minimumDegreeNode);
+			nodeDegreeList.remove(minimumDegreeNode.getIndex());
+			
+			// Update the vector count for the nodes adjacent to v
+			for(Node nodeTobeUpdated : nodesTobeUpdatedList) {
+				int mustBeUpdatedNodeDegree = nodeDegreeList.get(nodeTobeUpdated.getIndex());
+				nodeDegreeList.set(nodeTobeUpdated.getIndex(), mustBeUpdatedNodeDegree-1);
+			}		
 		}
 		
 		return topologicalList;
 	}
 	
-	private void removeNode(Node node) {
-		nodeList.remove(node);
-		for(int i = 0; i < getNumberOfNodes(); i++) {
-			adjacencyMatrix[node.getIndex()][i] = 0;
-			adjacencyMatrix[i][node.getIndex()] = 0;
+	public void removeNode(Node toBeremoved) {
+		for(int i = toBeremoved.getIndex(); i < getNumberOfNodes() && i < MAX_NODES-1; i++) {
+			for(int j = 0; j < getNumberOfNodes(); j++) {
+				adjacencyMatrix[i][j] = adjacencyMatrix[i+1][j];
+			}
 		}
+		for(int i = toBeremoved.getIndex(); i < getNumberOfNodes() && i < MAX_NODES-1; i++) {
+			for(int j = 0; j < getNumberOfNodes(); j++) {
+				adjacencyMatrix[j][i] = adjacencyMatrix[j][i+1];
+			}
+		}
+		for(int i = toBeremoved.getIndex()+1; i < getNumberOfNodes(); i++) {
+			nodeList.get(i).setIndex(i-1);
+		}
+		nodeList.remove(toBeremoved);
 	}
 
 	public Graph clone() {
 		Graph clone = new Graph();
 		
-		clone.adjacencyMatrix = this.adjacencyMatrix;
-		clone.nodeList = this.nodeList;
+		for(int i = 0; i < getNumberOfNodes(); i++) {
+			for(int j = 0; j < getNumberOfNodes(); j++) {
+				clone.adjacencyMatrix[i][j] = adjacencyMatrix[i][j];
+			}
+		}
 		
+		for(Node node : nodeList) {
+			clone.addNode(new Node(node.getLabel()));
+		}
+		 
 		return clone;
 	}
 	
-	private List<Integer> dfsNodesDegree(Graph clone) {
-		Stack<Node> stack = new Stack<Node>();
-		Node first, top, adj;
+	private List<Integer> bfsNodesDegree(Graph clone) {
+		Queue<Node> bfsQueue;
+		Node first, n, adj;
 		List<Integer> nodeDegreeList = new ArrayList<Integer>();
-		for(int i = 0; i < getNumberOfNodes(); i++) {
+		for(int i = 0; i < clone.getNumberOfNodes(); i++) {
 			nodeDegreeList.add(0);
 		}
 		
-		while( (first = clone.getFirstUnvisited()) != null ){
-			stack.push(first);
+		bfsQueue = new LinkedList<Node>();
+		int i;
+		while( (first = clone.getFirstUnvisited()) != null){
+			bfsQueue.add(first);
+			first.setVisited(true);
 			
-			while(!stack.isEmpty()) {
-				top = stack.peek();
-				top.setVisited(true);
+			while(!bfsQueue.isEmpty()){	
+				n = bfsQueue.remove();
 				
-				boolean foundNode = false;
-				
-				for(int i = 0; i < clone.getNumberOfNodes(); i++) {
-					if(clone.adjacencyMatrix[top.getIndex()][i] == 1) {
+				for(i=0; i < clone.getNumberOfNodes(); i++){
+					if(clone.adjacencyMatrix[n.getIndex()][i] == 1){
 						adj = clone.nodeList.get(i);
 						Integer nodeDegree = nodeDegreeList.get(adj.getIndex());
 						nodeDegreeList.set(adj.getIndex(), nodeDegree + 1);
-						
-						if (!adj.isVisited()) {
-							printEdge(top, adj);
-							stack.push(adj);
-							foundNode = true;
-							break;
+						if(!adj.isVisited()){
+							adj.setVisited(true);
+							bfsQueue.add(adj);
 						}
 					}
 				}
-				if(!foundNode)
-					stack.pop();
 			}
 		}
 		
