@@ -1,4 +1,4 @@
-package br.unb.graphLinkedList;
+package br.unb.graph;
 
 /*
  * Classe que representa as arestas utilizadas na Lista de Adjacência
