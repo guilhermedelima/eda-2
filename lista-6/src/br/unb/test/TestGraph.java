@@ -1,3 +1,5 @@
+package br.unb.test;
+
 import java.util.List;
 
 import br.unb.graph.Graph;
