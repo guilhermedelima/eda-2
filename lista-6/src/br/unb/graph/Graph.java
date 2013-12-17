@@ -47,6 +47,9 @@ public class Graph {
 	/* Método que realiza a busca em largura no Grafo */
 	public void breadthFirstSearch(){
 		
+		//Prepara os nós para uma nova busca
+		clearVisitedNodes();
+		
 		Queue<Node> bfsQueue;
 		Node first, n, adj;
 		
@@ -66,20 +69,19 @@ public class Graph {
 				}
 			}
 		}
-		
-		clearVisitedNodes();
 	}
 	
 	/* Método que realiza a busca em profundidade no Grafo */
 	public void depthFirstSearch(){
+		
+		//Prepara os nós para uma nova busca
+		clearVisitedNodes();
 		
 		Node n;
 		
 		while( (n=getFirstUnvisitedNode()) != null){
 			dfsVisit(n);
 		}
-		
-		clearVisitedNodes();
 	}
 	
 	/* Chamada recursiva utilizada pela busca em profundidade */
@@ -147,6 +149,9 @@ public class Graph {
 	/* Busca por largura para preencher vetor count, utilizado na Ordenação Topológica */
 	private int[] bfsNodesFillCount(){
 		
+		//Prepara os nós para uma nova busca
+		clearVisitedNodes();
+		
 		Queue<Node> bfsQueue;
 		List<Node> neighbors;
 		Node first, n;
@@ -175,8 +180,7 @@ public class Graph {
 				}
 			}
 		}
-		
-		clearVisitedNodes();	
+			
 		return count;
 	}
 	
